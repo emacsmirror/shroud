@@ -40,19 +40,15 @@
   "Emacs mode for shroud password manager"
   :prefix "shroud-"
   :group 'shroud)
-
 (defcustom shroud-password-length 8
   "Default password length."
   :group 'shroud
   :type 'number)
-
 (defvar shroud-executable
   (executable-find "shroud")
   "Shroud executable.")
-
 (defvar shroud-timeout-timer nil
   "Timer for clearing the clipboard.")
-
 (defun shroud-timeout ()
   "Number of seconds to wait before clearing the password."
   (if (getenv "SHROUD_CLIPBOARD_TIMEOUT")
@@ -131,7 +127,6 @@ ARGS are passed straight to shroud."
 ;;; shroud hide edit entry username
 ;;; shroud hide edit add entry new-entry value
 ;;; shroud hide edit
-
 (defun shroud--show (entry &rest args)
   "Return the output of shroud show ENTRY.
 if ARGS are nil, shroud will show you all sub-entries.
@@ -187,13 +182,33 @@ Otherwise, you can pass the ARGS as STRING."
 ;; ;;(shroud--remove "bank-account")
 ;; ;;(shroud--remove "email")
 
-;;; Use shroud.el instead of the eshell shroud commands
-;;; Output all shroud entries in a new buffer
+;;; So, we have most of the commands that we will need to use bound to
+;;; very friendly elisp functions. Notably missing is clipboard clear
+;;; functionality.
 
-;;; We will have a minor-mode-keymap we will add the keybindings to.
+;;; However, since I am already depending on shroud, it's better to
+;;; slowly improve upon the broken application rather wait for myself
+;;; to get the motivation(tm) to do it properly.
+
+;;; I like the popup buffer UI a lot. I think a good UI would still be
+;;; a helm UI but i still don't fully understand how it might work.
+
+;;; Let's implement what we know already, We need a popup buffer which
+;;; will show the available entries in shroud.  First course of
+;;; action, define a procedure to output all shroud entries in a new
+;;; buffer. Then, We will have a shroud-minor-mode-map we will add the
+;;; keybindings to, so that we can quickly execute commands on
+;;; entries. Commands like adding password, url, or either username to
+;;; the kill-ring.
+
+;;; Minor mode map will contain the keyboard shortcuts for shroud-minor-mode.
 (defvar shroud-minor-mode-map (make-sparse-keymap "shroud-minor-mode-map"))
+
+;;; This procedure prints the available entries in shroud in a split window.
 (defun nly/shroud ()
-  "Open a *shroud* buffer."
+  "Open a *shroud* buffer in new window listing available entries.
+
+Activates READ-ONLY-MODE and SHROUD-MINOR-MODE."
   (interactive)
   (progn
     (switch-to-buffer-other-window "*shroud*")
@@ -205,7 +220,8 @@ Otherwise, you can pass the ARGS as STRING."
               "\n"))
     (read-only-mode t)))
 ;;; Define a minor mode to be enabled in this new buffer so that i can
-;;; get the password or username or url with a single shortcut.
+;;; get the password or username or url with a single shortcut. The
+;;; minor mode will make it easier to toggle between the shroud shortcuts.
 (define-minor-mode shroud-minor-mode
   "Shroud mode which binds easy shortcuts to shroud commands."
   :mode nil
@@ -216,7 +232,10 @@ Otherwise, you can pass the ARGS as STRING."
   )
 ;;; Enable the mode for testing.
 ;;(shroud-minor-mode t)
-;;; Bind a command to a key.
+;;; A helper function which will help us get the string of the current
+;;; entry. We'd like to close the buffer after we have performed the
+;;; operation. Atleast provides some privacy from
+;;; peeking-over-the-shoulder(tm) attacks.
 (defun nly/shroud-entry ()
   "Get the current shroud entry."
   (save-excursion
@@ -225,6 +244,10 @@ Otherwise, you can pass the ARGS as STRING."
            (text (buffer-substring-no-properties p2 p1)))
       (delete-window)
       text)))
+;;; We would like to atleast have the ability to get the password,
+;;; url, or username of the current entry, one at a time. For that we
+;;; are defining some procedures which can then be bound to single key
+;;; shortcuts.
 (defun nly/shroud-get-password ()
   "Copy password to clipboard for current entry."
   (interactive)
@@ -238,6 +261,8 @@ Otherwise, you can pass the ARGS as STRING."
   (interactive)
   (kill-new (shroud--show-username (nly/shroud-entry))))
 
+;;; Bind the desirable functionality to easy to understand keys. Bug:
+;;; there is no documentation for these in C-h m; `describe-mode'.
 (define-key shroud-minor-mode-map (kbd "n")
   'forward-line)
 (define-key shroud-minor-mode-map (kbd "f")
@@ -255,8 +280,10 @@ Otherwise, you can pass the ARGS as STRING."
 (define-key shroud-minor-mode-map (kbd "q")
   'delete-window)
 
-(nly/set-key '("C-c p" . nly/shroud))
-;; (nly/shroud)
+;;; Warning this module performs keybinds that you might not
+;; expect. You can ofcourse bind it to something else or call it
+;; interactively using M-x.
+;; (global-set-key '("C-c p") 'nly/shroud)
 
 (provide 'shroud)
 ;;; shroud.el ends here
