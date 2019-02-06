@@ -34,7 +34,6 @@
 
 (require 's)
 (require 'f)
-(require 'with-editor)
 
 (defgroup shroud '()
   "Emacs mode for shroud password manager"
