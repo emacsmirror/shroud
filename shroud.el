@@ -212,7 +212,13 @@ Activates READ-ONLY-MODE and SHROUD-MINOR-MODE."
   (interactive)
   (progn
     (switch-to-buffer-other-window "*shroud*")
+    (read-only-mode -1)
     (erase-buffer)
+    (insert
+     (propertize
+      ";; Keybinds: n : next line | p : previous-line | u : copy-username\n |
+  s : copy-password | l : copy-url | q : quit\n\n"
+      :face '(:foreground "green")))
     (shroud-minor-mode t)
     (insert  (mapconcat
               'identity
@@ -242,8 +248,10 @@ Activates READ-ONLY-MODE and SHROUD-MINOR-MODE."
     (let* ((p1 (progn (beginning-of-line) (point)))
            (p2 (progn (end-of-line) (point)))
            (text (buffer-substring-no-properties p2 p1)))
+      (kill-buffer "*shroud*")
       (delete-window)
       text)))
+
 ;;; We would like to atleast have the ability to get the password,
 ;;; url, or username of the current entry, one at a time. For that we
 ;;; are defining some procedures which can then be bound to single key
