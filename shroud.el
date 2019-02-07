@@ -215,8 +215,8 @@ Activates READ-ONLY-MODE and SHROUD-MINOR-MODE."
     (erase-buffer)
     (insert
      (propertize
-      ";; Keybinds: n : next line | p : previous-line | u : copy-username\n |
-  s : copy-password | l : copy-url | q : quit\n\n"
+      "Keybinds: n -> next line | p -> previous-line | u -> copy-username
+s -> copy-password | l -> copy-url | q -> quit\n\n"
       :face '(:foreground "green")))
     (shroud-minor-mode t)
     (insert  (mapconcat
