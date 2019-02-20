@@ -177,97 +177,124 @@ Otherwise, you can pass the ARGS as STRING."
 ;;; entries. Commands like adding password, url, or either username to
 ;;; the kill-ring.
 
-;;; Minor mode map will contain the keyboard shortcuts for shroud-minor-mode.
-(defvar shroud-minor-mode-map (make-sparse-keymap "shroud-minor-mode-map"))
+;;; Minor mode map will contain the keyboard shortcuts for
+;;; `shroud-minor-mode'.It may not be necessary after we have a better
+;;; Interface like BUI.
+;;; This procedure prints the available entries in shroud in a split
+;;; window.  The ad-hoc buffer interface we created earlier is not
+;;; sufficient, it uses up too much space, messes up the previous
+;;; window layout. We'd like to use something more convenient, and at
+;;; the same time, avoid the work that comes with it. The author of
+;;; this package is already familiar with Buffer User Interface (BUI)
+;;; used in guix.el. So, it would be a fine first choice. We want a
+;;; buffer to display the available password entries, and though, bui
+;;; should provide us to display more details, for the privacy context
+;;; of our application, we'd like to only show the Title, and perhaps
+;;; the URL? Depending on how risky you are feeling, you could display
+;;; even emails/username(!) for peek-over-the-shoulder security
+;;; attacks. But make no mistake, this package is by no means secure,
+;;; as it stores the password as plain string in the kill
+;;; ring. Lazy...  err, lack of incentive.
 
-;;; This procedure prints the available entries in shroud in a split window.
-(defun nly/shroud ()
-  "Open a *shroud* buffer in new window listing available entries.
+;;; Load the bui library
+(require 'bui)
 
-Activates READ-ONLY-MODE and SHROUD-MINOR-MODE."
+;;; Hug it, I'll drop the nly/ prefix, it just seems silly now.
+;;; The entry point to the shroud BUI.
+;;; Let's just read directly from the db.gpg file using elisp
+(defun shroud-entries ()
+  "Format the shroud db to something suitable for BUI."
+  ;;(mapcar 'shroud-entry (shroud--list))
+  ;; This function can read a shroud db from a file.
+  (let* ((db (shroud--read-db)))
+    (defun first (x) (car x))
+    (defun rest (x) (cdr x))
+    (defun flatten-contents (x) (rest (first x)))
+    (defun name-from-id (x)
+      (cons (if (equal (first x) 'id)
+                'name
+              (first x))
+            (rest x)))
+    (mapcar
+     #'(lambda (x) (cons (first x)
+                    (cons (name-from-id (first x))
+                          (flatten-contents (rest x)))))
+     db)))
+
+;; Individually reading entries is painfully slow
+(defun shroud-bui ()
+  "Display a list of entries in the shroud db."
   (interactive)
-  (progn
-    (switch-to-buffer-other-window "*shroud*")
-    (read-only-mode -1)
-    (erase-buffer)
-    (insert
-     (propertize
-      "Keybinds: n -> next line | p -> previous-line | u -> copy-username
-s -> copy-password | l -> copy-url | q -> quit\n\n"
-      :face '(:foreground "green")))
-    (shroud-minor-mode t)
-    (insert  (mapconcat
-              'identity
-              (shroud--list)
-              "\n"))
-    (read-only-mode t)))
+  (bui-get-display-entries 'shroud-entries 'list))
+;;; This is the interface for defining a BUI interface. It has a
+;;; simple declarative syntax and a clean seperation of processes. For
+;;; example, the BUI requires the entries to be formatted, you can
+;;; define the format within this interface, and then leisurely define
+;;; a procedure, externally, which may "massage" your data into the
+;;; correct format.
+(bui-define-interface shroud-entries list
+  :buffer-name "*Shroud*"
+  :get-entries-function 'shroud-entries
+  :format
+  '((name nil 30 t)
+    (password nil 30 t)
+    (username nil 8 t)
+    (url nil 8 t)
+    (notes nil 8 t))
+  :sort-key '(name))
+
+;;; Alright, so it appears shroud is very limited in terms of
+;;; functionality and i can probably do much better if i simply use
+;;; the elisp features to read and parse the file. Shroud provides
+;;; another interface to the database, which then makes three
+;;; interfaces, plain text; after decryption, shroud cli, shroud.el,
+;;; and pure elisp interface. At this point only the data structure is
+;;; important.  So, emacs has features to decrypt a file, decrypt
+;;; buffers and whatnot. I have a feeling this is also going to be a
+;;; bit ad-hoc, which scares me. Ad-hoc code is never portable or
+;;; doesnt last as long. Nevertheless it's much better than limiting
+;;; myself to the very limited cli interface, through which all elisp
+;;; code has to go anyway. Alternatively can i use a guile daemon? So
+;;; enraging arghh!
+
+;;; Elisp reader for shroud db.gpg
+(defun shroud--read-db (&optional db-file)
+  "Decrypt and read the shroud db.  By default it's the db.gpg file.
+
+Optionally DB-FILE is the file you want to read."
+  (read (with-temp-buffer
+          (insert-file-contents-literally (if db-file db-file (concat (getenv "HOME")
+                                                       "/.config/shroud/db.gpg")))
+          (let ((context (epg-make-context 'OpenPGP)))
+            (decode-coding-string
+             (epg-decrypt-string context (buffer-substring-no-properties (point-min) (point-max)))
+             'utf-8)))))
+
+;;; Just reading the database is not enough, we need to slighly
+;;; massage the data so that it's usable by BUI.
+
 ;;; Define a minor mode to be enabled in this new buffer so that i can
 ;;; get the password or username or url with a single shortcut. The
 ;;; minor mode will make it easier to toggle between the shroud shortcuts.
-(define-minor-mode shroud-minor-mode
-  "Shroud mode which binds easy shortcuts to shroud commands."
-  :mode nil
-  :init-value nil
-  :global nil
-  :lighter " Shroud"
-  :keymap shroud-minor-mode-map
-  )
 ;;; Enable the mode for testing.
 ;;(shroud-minor-mode t)
 ;;; A helper function which will help us get the string of the current
 ;;; entry. We'd like to close the buffer after we have performed the
 ;;; operation. Atleast provides some privacy from
 ;;; peeking-over-the-shoulder(tm) attacks.
-(defun nly/shroud-entry ()
-  "Get the current shroud entry."
-  (save-excursion
-    (let* ((p1 (progn (beginning-of-line) (point)))
-           (p2 (progn (end-of-line) (point)))
-           (text (buffer-substring-no-properties p2 p1)))
-      (kill-buffer "*shroud*")
-      (delete-window)
-      text)))
 
 ;;; We would like to atleast have the ability to get the password,
 ;;; url, or username of the current entry, one at a time. For that we
 ;;; are defining some procedures which can then be bound to single key
 ;;; shortcuts.
-(defun nly/shroud-get-password ()
-  "Copy password to clipboard for current entry."
-  (interactive)
-  (kill-new (shroud--show-password (nly/shroud-entry))))
-(defun nly/shroud-get-url ()
-  "Copy password to clipboard for current entry."
-  (interactive)
-  (kill-new (shroud--show-url (nly/shroud-entry))))
-(defun nly/shroud-get-username ()
-  "Copy password to clipboard for current entry."
-  (interactive)
-  (kill-new (shroud--show-username (nly/shroud-entry))))
 
 ;;; Bind the desirable functionality to easy to understand keys. Bug:
 ;;; there is no documentation for these in C-h m; `describe-mode'.
-(define-key shroud-minor-mode-map (kbd "n")
-  'forward-line)
-(define-key shroud-minor-mode-map (kbd "f")
-  'forward-char)
-(define-key shroud-minor-mode-map (kbd "b")
-  'backward-char)
-(define-key shroud-minor-mode-map (kbd "p")
-  'previous-line)
-(define-key shroud-minor-mode-map (kbd "s")
-  'nly/shroud-get-password)
-(define-key shroud-minor-mode-map (kbd "u")
-  'nly/shroud-get-username)
-(define-key shroud-minor-mode-map (kbd "l")
-  'nly/shroud-get-url)
-(define-key shroud-minor-mode-map (kbd "q")
-  'delete-window)
-
 ;;; Warning this module performs keybinds that you might not
 ;; expect. You can ofcourse bind it to something else or call it
 ;; interactively using M-x.
-;; (global-set-key '("C-c p") 'nly/shroud)
+;; (global-set-key '("C-c p") 'shroud)
 
 (provide 'shroud)
+
 ;;; shroud.el ends here
