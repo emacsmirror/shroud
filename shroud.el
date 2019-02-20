@@ -137,8 +137,9 @@ if SUB-ENTRY are nil, shroud will show you all sub-entries.
 Otherwise, you can pass the ARGS as STRING."
   (apply #'shroud--show entry sub-entry))
 (defun shroud--show-clipboard (entry &rest sub-entries)
-  "Does not work, atleast, in emacs exwm."
+  "Does not work, atleast, in EMACS exwm.  ENTRY.  SUB-ENTRIES."
   (apply #'shroud--show "--clipboard" entry sub-entries))
+;;; Bug when entries may contain empty entries or newlines in entries
 (defun shroud--show-entry (entry)
   "Return the results of shroud--show ENTRY in Lisp lists."
   (mapcar #'(lambda (x) (s-split " " x))
