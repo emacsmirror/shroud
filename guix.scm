@@ -68,6 +68,7 @@
    (propagated-inputs
     `(("emacs-f" ,emacs-f)
       ("emacs-s" ,emacs-s)
+      ("emacs-bui" ,emacs-bui)
       ("shroud" ,shroud)))
    (home-page "http://nly.info.tm:9001/emacs/shroud.el")
    (synopsis "Shroud (gpg) support for Emacs")

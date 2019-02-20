@@ -157,30 +157,6 @@ Otherwise, you can pass the ARGS as STRING."
 (defun shroud--remove (entry)
   "Shroud remove ENTRY."
   (apply 'shroud--run `("remove" ,entry)))
-;;; tests
-;; (shroud--hide "bank-account" "username=user" "password=pass")
-;;(shroud--hide "*test" "username=shark" "password=meat")
-;; (shroud--run "show"  "bank-account")
-;; (shroud--show-entry "bank-account")
-;; (shroud--show "-c" "email" "username")
-;; (shroud--show-username "email")
-;; (shroud--show-url "email")
-;; (shroud--show "email" "username" "password")
-;; (shroud--help)
-;; (shroud--help "list")
-;; (shroud--help--remove)
-;; (shroud--help--list)
-;; (shroud--version)
-;; (shroud--list)
-;; (shroud--show-username "*test")
-;; ;;(shroud--run "hide" "test" "user=name")
-;; ;; (shroud--hide "test3" "username=user" "password=pass2")
-;; ;; (shroud--hide-edit "test" "password=pass12")
-;; (shroud--show "test")
-;; (shroud--show-sub-entries "email" "username")
-;; ;;(shroud--remove "bank-account")
-;; ;;(shroud--remove "email")
-
 ;;; So, we have most of the commands that we will need to use bound to
 ;;; very friendly elisp functions. Notably missing is clipboard clear
 ;;; functionality.
