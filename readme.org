@@ -10,5 +10,5 @@
    - A Buffers User Interface to view entries in the database `shroud-bui'
 
 ** For a quick start
-   M-x shroud-bui
-   (global-set-key (kbd "C-c p") 'shroud-bui)
+   - M-x shroud-bui
+   - (global-set-key (kbd "C-c p") 'shroud-bui)
