@@ -1,13 +1,11 @@
-;;; shroud.el --- shroud interface for emacs.        -*- lexical-binding: t; -*-
+;;; shroud.el --- interface for shroud        -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019  Amar Singh
 
-;; Author: Amar Singh <nly@disroot.org>
-;; Version: 0.1
-;; Keywords: password-manager, guile, guile-shroud
-;; Package-Requires: ((f) (s) (with-editor))
-
-;; This file is not part of GNU Emacs.
+;;; Author: Amar Singh <nly@disroot.org>
+;;; Homepage: http://git.nly.info.tm:9001/shroud.git
+;;; Package-Version: 1
+;;; Package-Requires: ((emacs "24"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -28,7 +26,6 @@
 ;; scheme expressions.  This package provides functions for working
 ;; with shroud.
 ;;
-;; http://nly.info.tm:9000/emacs/shroud.el
 
 ;;; Code:
 
@@ -36,7 +33,7 @@
 (require 'f)
 
 (defgroup shroud '()
-  "Emacs mode for shroud password manager"
+  "Interface for shroud password manager"
   :prefix "shroud-"
   :group 'shroud)
 (defcustom shroud-password-length 8
