@@ -67,15 +67,15 @@ Nil arguments will be ignored.  Returns the output on success,  or
         (insert-file-contents tempfile))
       (delete-file tempfile)
       (if (zerop exit-code)
-          (s-chomp (buffer-string))
-        (error (s-chomp (buffer-string)))))))
+          (string-trim (buffer-string))
+        (error (string-trim (buffer-string)))))))
 (defalias 'shroud--run 'shroud--run-internal)
 
 ;;; use shroud--run instead.
 (defun shroud--internal-old (shroud-command &rest args)
   "Internal shroud helper function.
 Execute SHROUD-COMMAND with &rest ARGS."
-  (s-chomp (shell-command-to-string
+  (string-trim (shell-command-to-string
             (mapconcat 'identity
                        (cons shroud-executable
                              (cons shroud-command
@@ -109,7 +109,7 @@ ARGS are passed straight to shroud."
 (defun shroud--list ()
   "Return the output of shroud list.
 ARGS are passed straight to shroud."
-  (s-split "\n" (shroud--run "list")))
+  (split-string  (shroud--run "list") "\n"))
 
 (defun shroud--hide (&rest args)
   "Return the output of shroud list.
@@ -139,9 +139,9 @@ Otherwise, you can pass the ARGS as STRING."
 ;;; Bug when entries may contain empty entries or newlines in entries
 (defun shroud--show-entry (entry)
   "Return the results of ‘shroud--show’ ENTRY in Lisp lists."
-  (mapcar #'(lambda (x) (s-split " " x))
+  (mapcar #'(lambda (x) (split-string x " "))
           (mapcar 's-collapse-whitespace
-                  (s-split "\n" (shroud--show entry)))))
+                  (split-string (shroud--show entry) "\n"))))
 (defun shroud--show-username (entry)
   "Show the password for given ENTRY."
   (shroud--show entry "username"))
