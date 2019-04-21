@@ -42,7 +42,7 @@
 (defvar shroud-executable
   (executable-find "shroud")
   "Shroud executable.")
-(defvar shroud-timeout-timer nil
+(defcustom shroud-timeout-timer nil
   "Timer for clearing the clipboard.")
 (defun shroud-timeout ()
   "Number of seconds to wait before clearing the password."
