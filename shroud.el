@@ -43,7 +43,8 @@
   (executable-find "shroud")
   "Shroud executable.")
 (defcustom shroud-timeout-timer nil
-  "Timer for clearing the clipboard.")
+  "Timer for clearing the clipboard."
+  :type 'integer)
 (defun shroud-timeout ()
   "Number of seconds to wait before clearing the password."
   (if (getenv "SHROUD_CLIPBOARD_TIMEOUT")
