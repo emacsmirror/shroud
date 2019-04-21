@@ -29,7 +29,6 @@
 
 ;;; Code:
 
-(require 's)
 (require 'f)
 
 (defgroup shroud '()
@@ -140,7 +139,7 @@ Otherwise, you can pass the ARGS as STRING."
 (defun shroud--show-entry (entry)
   "Return the results of ‘shroud--show’ ENTRY in Lisp lists."
   (mapcar #'(lambda (x) (split-string x " "))
-          (mapcar 's-collapse-whitespace
+          (mapcar #'(lambda (s) (replace-regexp-in-string "[ \t\n\r]+" " " s))
                   (split-string (shroud--show entry) "\n"))))
 (defun shroud--show-username (entry)
   "Show the password for given ENTRY."
