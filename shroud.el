@@ -5,7 +5,7 @@
 ;;; Author: Amar Singh <nly@disroot.org>
 ;;; Homepage: http://git.nly.info.tm:9001/shroud.git
 ;;; Package-Version: 1
-;;; Package-Requires: ((emacs "24"))
+;;; Package-Requires: ((emacs "24") (f "0.20"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
