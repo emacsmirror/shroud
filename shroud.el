@@ -217,17 +217,18 @@ Otherwise, you can pass the ARGS as STRING."
   ;;(mapcar 'shroud-entry (shroud--list))
   ;; This function can read a shroud db from a file.
   (let* ((db (shroud--read-db)))
-    (setf (symbol-function 'flatten-contents) #'(lambda (x) (rest (first x))))
-    (setf (symbol-function 'name-from-id) #'(lambda (x)
-                                              (cons (if (equal (first x) 'id)
-                                                        'name
-                                                      (first x))
-                                                    (rest x))))
-    (mapcar
-     #'(lambda (x) (cons (first x)
-                    (cons (name-from-id (first x))
-                          (flatten-contents (rest x)))))
-     db)))
+    (cl-labels
+        ((flatten-contents (x) (rest (first x)))
+         (name-from-id (x)
+                       (cons (if (equal (first x) 'id)
+                                 'name
+                               (first x))
+                             (rest x))))
+      (mapcar
+       #'(lambda (x) (cons (first x)
+                      (cons (name-from-id (first x))
+                            (flatten-contents (rest x)))))
+       db))))
 
 ;; Individually reading entries is painfully slow
 (defun shroud-bui ()
