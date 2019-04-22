@@ -168,7 +168,7 @@ Otherwise, you can pass the ARGS as STRING."
 
 (defun shroud--remove (entry)
   "Shroud remove ENTRY."
-  (apply 'shroud--run `("remove" ,entry)))
+  (shroud--run "remove" entry))
 ;;; So, we have most of the commands that we will need to use bound to
 ;;; very friendly elisp functions. Notably missing is clipboard clear
 ;;; functionality.
