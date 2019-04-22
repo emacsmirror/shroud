@@ -24,7 +24,7 @@
 
 ;; Shroud is a simple password manager using gnupg to encrypt plain
 ;; scheme expressions.  This package provides functions for working
-;; with shroud.
+;; with shroud.  To use M-x shroud.
 ;;
 
 ;;; Code:
