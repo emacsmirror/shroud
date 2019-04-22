@@ -30,21 +30,26 @@
 ;;; Code:
 
 (require 'f)
+(require 'bui)
 
 (defgroup shroud '()
   "Interface for shroud password manager"
   :prefix "shroud-"
   :group 'shroud)
+
 (defcustom shroud-password-length 8
   "Default password length."
   :group 'shroud
   :type 'number)
+
 (defvar shroud-executable
   (executable-find "shroud")
   "Shroud executable.")
+
 (defcustom shroud-timeout-timer nil
   "Timer for clearing the clipboard."
   :type 'integer)
+
 (defun shroud-timeout ()
   "Number of seconds to wait before clearing the password."
   (if (getenv "SHROUD_CLIPBOARD_TIMEOUT")
@@ -91,12 +96,15 @@ SUB-ENTRY is passed straight to shroud."
 (defun shroud--help--list ()
   "Return shroud help strings."
   (shroud--help "list"))
+
 (defun shroud--help--remove ()
   "Return shroud help strings."
   (shroud--help "remove"))
+
 (defun shroud--help--hide ()
   "Return shroud help strings."
   (shroud--help "hide"))
+
 (defun shroud--help--show ()
   "Return shroud help strings."
   (shroud--help "show"))
@@ -115,6 +123,7 @@ ARGS are passed straight to shroud."
   "Return the output of shroud list.
 ARGS are passed straight to shroud."
   (apply #'shroud--run "hide" args))
+
 (defun shroud--hide-edit (&rest args)
   "Return the output of shroud list.
 ARGS are passed straight to shroud."
@@ -128,11 +137,13 @@ ARGS are passed straight to shroud."
 if ARGS are nil, shroud will show you all sub-entries.
 Otherwise, you can pass the ARGS as STRING."
   (apply #'shroud--run "show" entry args))
+
 (defun shroud--show-sub-entries (entry &rest sub-entry)
   "Return the output of shroud show ENTRY.
 if SUB-ENTRY are nil, shroud will show you all sub-entries.
 Otherwise, you can pass the ARGS as STRING."
   (apply #'shroud--show entry sub-entry))
+
 (defun shroud--show-clipboard (entry &rest sub-entries)
   "Does not work, atleast, in EMACS exwm.  ENTRY.  SUB-ENTRIES."
   (apply #'shroud--show "--clipboard" entry sub-entries))
@@ -142,12 +153,15 @@ Otherwise, you can pass the ARGS as STRING."
   (mapcar #'(lambda (x) (split-string x " "))
           (mapcar #'(lambda (s) (replace-regexp-in-string "[ \t\n\r]+" " " s))
                   (split-string (shroud--show entry) "\n"))))
+
 (defun shroud--show-username (entry)
   "Show the password for given ENTRY."
   (shroud--show entry "username"))
+
 (defun shroud--show-password (entry)
   "Show the password for given ENTRY."
   (shroud--show entry "password"))
+
 (defun shroud--show-url (entry)
   "Show the password for given ENTRY."
   (shroud--show entry "url"))
@@ -194,7 +208,6 @@ Otherwise, you can pass the ARGS as STRING."
 ;;; ring. Lazy...  err, lack of incentive.
 
 ;;; Load the bui library
-(require 'bui)
 
 ;;; Hug it, I'll drop the nly/ prefix, it just seems silly now.
 ;;; The entry point to the shroud BUI.
