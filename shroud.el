@@ -278,6 +278,7 @@ Optionally DB-FILE is the file you want to read."
              (epg-decrypt-string context (buffer-substring-no-properties (point-min) (point-max)))
              'utf-8)))))
 
+(defalias 'shroud 'shroud-bui)
 ;;; Just reading the database is not enough, we need to slighly
 ;;; massage the data so that it's usable by BUI.
 
