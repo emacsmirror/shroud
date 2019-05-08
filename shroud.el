@@ -48,8 +48,9 @@
   :group 'shroud
   :type 'executable)
 
-(defcustom shroud-database-file (or (concat (getenv "HOME") "/.config/shroud/db.gpg"))
+(defcustom shroud-database-file
   "Shroud Datastore file.  Encrypted."
+  (or (concat (getenv "HOME") "/.config/shroud/db.gpg"))
   :group 'shroud
   :type 'file)
 
