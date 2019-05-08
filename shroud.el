@@ -42,19 +42,34 @@
   :group 'shroud
   :type 'number)
 
-(defvar shroud-executable
+(defcustom shroud-executable
+  "Shroud executable."
   (executable-find "shroud")
-  "Shroud executable.")
+  :group 'shroud
+  :type 'executable)
 
-(defcustom shroud-timeout-timer nil
-  "Timer for clearing the clipboard."
+(defcustom shroud-database-file (or (concat (getenv "HOME") "/.config/shroud/db.gpg"))
+  "Shroud Datastore file.  Encrypted."
+  :group 'shroud
+  :type 'file)
+
+(defcustom shroud-timeout
+  "Number of seconds to wait before clearing the password."
+  (or (getenv "SHROUD_CLIPBOARD_TIMEOUT")
+      45)
+  :group 'shroud
   :type 'integer)
 
-(defun shroud-timeout ()
-  "Number of seconds to wait before clearing the password."
-  (if (getenv "SHROUD_CLIPBOARD_TIMEOUT")
-      (string-to-number (getenv "SHROUD_CLIPBOARD_TIMEOUT"))
-    45))
+;;; use shroud--run instead.
+(defun shroud--internal-old (shroud-command &rest args)
+  "Internal shroud helper function.
+Execute SHROUD-COMMAND with &rest ARGS."
+  (string-trim (shell-command-to-string
+            (mapconcat 'identity
+                       (cons shroud-executable
+                             (cons shroud-command
+                                   (delq nil args)))
+                       " "))))
 
 (defun shroud--run-internal (&rest args)
   "Run the shroud commands with ARGS.
@@ -74,69 +89,68 @@ Nil arguments will be ignored.  Returns the output on success,  or
       (if (zerop exit-code)
           (string-trim (buffer-string))
         (error (string-trim (buffer-string)))))))
+
 (defalias 'shroud--run 'shroud--run-internal)
 
-;;; use shroud--run instead.
-(defun shroud--internal-old (shroud-command &rest args)
-  "Internal shroud helper function.
-Execute SHROUD-COMMAND with &rest ARGS."
-  (string-trim (shell-command-to-string
-            (mapconcat 'identity
-                       (cons shroud-executable
-                             (cons shroud-command
-                                   (delq nil args)))
-                       " "))))
-
-;;; these are working
+;;; Help
 (defun shroud--help (&rest sub-entry)
   "Return shroud help strings.
 SUB-ENTRY is passed straight to shroud."
   (apply #'shroud--run (car sub-entry) "--help" '()))
 
 (defun shroud--help--list ()
-  "Return shroud help strings."
+  "Return help strings for shroud list."
   (shroud--help "list"))
 
 (defun shroud--help--remove ()
-  "Return shroud help strings."
+  "Return help strings for shroud remove."
   (shroud--help "remove"))
 
 (defun shroud--help--hide ()
-  "Return shroud help strings."
+  "Return help strings for shroud hide."
   (shroud--help "hide"))
 
 (defun shroud--help--show ()
-  "Return shroud help strings."
+  "Return help strings for shroud show."
   (shroud--help "show"))
 
 (defun shroud--version ()
-  "Return shroud help strings.
-ARGS are passed straight to shroud."
+  "Return shroud version."
   (shroud--run "--version"))
 
+;;; List Entries
 (defun shroud--list ()
   "Return the output of shroud list.
 ARGS are passed straight to shroud."
   (split-string  (shroud--run "list") "\n"))
 
+;;; Hide secrets
 (defun shroud--hide (&rest args)
-  "Return the output of shroud list.
+  "Return the output of shroud hide.
 ARGS are passed straight to shroud."
   (apply #'shroud--run "hide" args))
 
 (defun shroud--hide-edit (&rest args)
-  "Return the output of shroud list.
+  "Return the output of shroud edit.
 ARGS are passed straight to shroud."
   (apply #'shroud--hide "--edit" args))
 ;;; shroud hide edit entry password
 ;;; shroud hide edit entry username
 ;;; shroud hide edit add entry new-entry value
 ;;; shroud hide edit
+
 (defun shroud--show (entry &rest args)
   "Return the output of shroud show ENTRY.
 if ARGS are nil, shroud will show you all sub-entries.
 Otherwise, you can pass the ARGS as STRING."
   (apply #'shroud--run "show" entry args))
+
+;;; Bug when entries may contain empty entries or newlines in entries
+(defun shroud--show-entry (entry)
+  "Return the results of ‘shroud--show’ ENTRY in Lisp lists."
+  (mapcar #'(lambda (x) (split-string x " "))
+          (mapcar #'(lambda (s) (replace-regexp-in-string "[ \t\n\r]+" " " s))
+                  (split-string (shroud--show entry) "\n"))))
 
 (defun shroud--show-sub-entries (entry &rest sub-entry)
   "Return the output of shroud show ENTRY.
@@ -145,17 +159,11 @@ Otherwise, you can pass the ARGS as STRING."
   (apply #'shroud--show entry sub-entry))
 
 (defun shroud--show-clipboard (entry &rest sub-entries)
-  "Does not work, atleast, in EMACS exwm.  ENTRY.  SUB-ENTRIES."
+  "Add the ENTRY and SUB-ENTRIES to clipboard."
   (apply #'shroud--show "--clipboard" entry sub-entries))
-;;; Bug when entries may contain empty entries or newlines in entries
-(defun shroud--show-entry (entry)
-  "Return the results of ‘shroud--show’ ENTRY in Lisp lists."
-  (mapcar #'(lambda (x) (split-string x " "))
-          (mapcar #'(lambda (s) (replace-regexp-in-string "[ \t\n\r]+" " " s))
-                  (split-string (shroud--show entry) "\n"))))
 
 (defun shroud--show-username (entry)
-  "Show the password for given ENTRY."
+  "Show the username for given ENTRY."
   (shroud--show entry "username"))
 
 (defun shroud--show-password (entry)
@@ -163,12 +171,13 @@ Otherwise, you can pass the ARGS as STRING."
   (shroud--show entry "password"))
 
 (defun shroud--show-url (entry)
-  "Show the password for given ENTRY."
+  "Show the url for given ENTRY."
   (shroud--show entry "url"))
 
 (defun shroud--remove (entry)
   "Shroud remove ENTRY."
   (shroud--run "remove" entry))
+
 ;;; So, we have most of the commands that we will need to use bound to
 ;;; very friendly elisp functions. Notably missing is clipboard clear
 ;;; functionality.
@@ -212,9 +221,38 @@ Otherwise, you can pass the ARGS as STRING."
 ;;; Hug it, I'll drop the nly/ prefix, it just seems silly now.
 ;;; The entry point to the shroud BUI.
 ;;; Let's just read directly from the db.gpg file using elisp
+
+;;; Alright, so it appears shroud is very limited in terms of
+;;; functionality and i can probably do much better if i simply use
+;;; the elisp features to read and parse the file. Shroud provides
+;;; another interface to the database, which then makes three
+;;; interfaces, plain text; after decryption, shroud cli, shroud.el,
+;;; and pure elisp interface. At this point only the data structure is
+;;; important.  So, emacs has features to decrypt a file, decrypt
+;;; buffers and whatnot. I have a feeling this is also going to be a
+;;; bit ad-hoc, which scares me. Ad-hoc code is never portable or
+;;; doesnt last as long. Nevertheless it's much better than limiting
+;;; myself to the very limited cli interface, through which all elisp
+;;; code has to go anyway. Alternatively can i use a guile daemon?
+
+;;; Elisp reader for shroud db.gpg
+;; Individually reading entries is painfully slow
+(defun shroud--read-db (&optional db-file)
+  "Decrypt and read the shroud db.  By default it's the db.gpg file.
+
+Optionally DB-FILE is the file you want to read."
+  (read (with-temp-buffer
+          (insert-file-contents-literally (or db-file shroud-database-file))
+          (let ((context (epg-make-context 'OpenPGP)))
+            (decode-coding-string
+             (epg-decrypt-string context (buffer-substring-no-properties (point-min) (point-max)))
+             'utf-8)))))
+
+;;; Just reading the database is not enough, we need to slighly
+;;; massage the data so that it's usable by BUI.
 (defun shroud-entries ()
   "Format the shroud db to something suitable for BUI."
-  ;;(mapcar 'shroud-entry (shroud--list))
+  ;; (mapcar 'shroud-entry (shroud--list)) ;; too slow
   ;; This function can read a shroud db from a file.
   (let* ((db (shroud--read-db)))
     (cl-labels
@@ -230,11 +268,6 @@ Otherwise, you can pass the ARGS as STRING."
                             (flatten-contents (rest x)))))
        db))))
 
-;; Individually reading entries is painfully slow
-(defun shroud-bui ()
-  "Display a list of entries in the shroud db."
-  (interactive)
-  (bui-get-display-entries 'shroud-entries 'list))
 ;;; This is the interface for defining a BUI interface. It has a
 ;;; simple declarative syntax and a clean seperation of processes. For
 ;;; example, the BUI requires the entries to be formatted, you can
@@ -252,58 +285,14 @@ Otherwise, you can pass the ARGS as STRING."
     (notes nil 8 t))
   :sort-key '(name))
 
-;;; Alright, so it appears shroud is very limited in terms of
-;;; functionality and i can probably do much better if i simply use
-;;; the elisp features to read and parse the file. Shroud provides
-;;; another interface to the database, which then makes three
-;;; interfaces, plain text; after decryption, shroud cli, shroud.el,
-;;; and pure elisp interface. At this point only the data structure is
-;;; important.  So, emacs has features to decrypt a file, decrypt
-;;; buffers and whatnot. I have a feeling this is also going to be a
-;;; bit ad-hoc, which scares me. Ad-hoc code is never portable or
-;;; doesnt last as long. Nevertheless it's much better than limiting
-;;; myself to the very limited cli interface, through which all elisp
-;;; code has to go anyway. Alternatively can i use a guile daemon? So
-;;; enraging arghh!
-
-;;; Elisp reader for shroud db.gpg
-(defun shroud--read-db (&optional db-file)
-  "Decrypt and read the shroud db.  By default it's the db.gpg file.
-
-Optionally DB-FILE is the file you want to read."
-  (read (with-temp-buffer
-          (insert-file-contents-literally (if db-file db-file (concat (getenv "HOME")
-                                                       "/.config/shroud/db.gpg")))
-          (let ((context (epg-make-context 'OpenPGP)))
-            (decode-coding-string
-             (epg-decrypt-string context (buffer-substring-no-properties (point-min) (point-max)))
-             'utf-8)))))
+(defun shroud-bui ()
+  "Display a list of entries in the shroud db."
+  (interactive)
+  (bui-get-display-entries 'shroud-entries 'list))
 
 (defalias 'shroud 'shroud-bui)
-;;; Just reading the database is not enough, we need to slighly
-;;; massage the data so that it's usable by BUI.
-
-;;; Define a minor mode to be enabled in this new buffer so that i can
-;;; get the password or username or url with a single shortcut. The
-;;; minor mode will make it easier to toggle between the shroud shortcuts.
-;;; Enable the mode for testing.
-;;(shroud-minor-mode t)
-;;; A helper function which will help us get the string of the current
-;;; entry. We'd like to close the buffer after we have performed the
-;;; operation. Atleast provides some privacy from
-;;; peeking-over-the-shoulder(tm) attacks.
-
-;;; We would like to atleast have the ability to get the password,
-;;; url, or username of the current entry, one at a time. For that we
-;;; are defining some procedures which can then be bound to single key
-;;; shortcuts.
-
-;;; Bind the desirable functionality to easy to understand keys. Bug:
-;;; there is no documentation for these in C-h m; `describe-mode'.
-;;; Warning this module performs keybinds that you might not
-;; expect. You can ofcourse bind it to something else or call it
-;; interactively using M-x.
-;; (global-set-key '("C-c p") 'shroud)
+;; interactively using M-x shroud
+;; or (global-set-key '("C-c p") 'shroud)
 
 (provide 'shroud)
 
