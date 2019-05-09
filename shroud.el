@@ -291,6 +291,7 @@ Optionally DB-FILE is the file you want to read."
   (interactive)
   (bui-get-display-entries 'shroud-entries 'list))
 
+;;;###autoload
 (defalias 'shroud 'shroud-bui)
 ;; interactively using M-x shroud
 ;; or (global-set-key '("C-c p") 'shroud)
