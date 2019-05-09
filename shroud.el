@@ -42,22 +42,22 @@
   :group 'shroud
   :type 'number)
 
-(defcustom shroud-executable
+(defcustom shroud-executable (executable-find "shroud")
   "Shroud executable."
-  (executable-find "shroud")
   :group 'shroud
   :type 'executable)
 
-(defcustom shroud-database-file
-  "Shroud Datastore file.  Encrypted."
-  (or (concat (getenv "HOME") "/.config/shroud/db.gpg"))
+(defcustom shroud-database-file (or (concat (getenv "HOME")
+					    "/.config/shroud/db.gpg"))
+  "Shroud Datastore file.
+
+GPG Encrypted."
   :group 'shroud
   :type 'file)
 
-(defcustom shroud-timeout
-  "Number of seconds to wait before clearing the password."
-  (or (getenv "SHROUD_CLIPBOARD_TIMEOUT")
+(defcustom shroud-timeout (or (getenv "SHROUD_CLIPBOARD_TIMEOUT")
       45)
+  "Number of seconds to wait before clearing the password."
   :group 'shroud
   :type 'integer)
 
