@@ -1,11 +1,12 @@
-;;; shroud.el --- interface for shroud        -*- lexical-binding: t; -*-
+;;; shroud.el --- Interface for Shroud        -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2019  Amar Singh
 
 ;;; Author: Amar Singh <nly@disroot.org>
 ;;; Homepage: http://git.nly.info.tm:9001/shroud.git
-;;; Package-Version: 1
-;;; Package-Requires: ((emacs "24") (f "0.20"))
+;;; Package-Version: 1.12
+;;; Keywords: tools
+;;; Package-Requires: ((emacs "24") (f "0.20") (bui "1.2.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -22,9 +23,9 @@
 
 ;;; Commentary:
 
-;; Shroud is a simple password manager using gnupg to encrypt plain
+;; Shroud is a simple password manager using Gnupg to encrypt plain
 ;; scheme expressions.  This package provides functions for working
-;; with shroud.  To use M-x shroud.
+;; with shroud.  To use: M-x shroud.
 ;;
 
 ;;; Code:
