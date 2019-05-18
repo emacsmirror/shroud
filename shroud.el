@@ -383,25 +383,32 @@ Optionally DB-FILE is the file you want to read."
                (password . "")
                (url . "")
                (notes . ()))))
-  "Shroud alist format")
+  "Shroud alist format"
+  :type 'alists)
 
 (defun shroud--k+v->string (pair)
   (if (not (-cons-pair? (cdr pair)))
       (format "%s=%s" (car pair) (cdr pair))
-    (format "%s=%s" (car pair) (shroud--k+v->string (cdr pair)))))
+    (format "%s=%s" (car pair) (cdr pair))))
 
 (defun shroud-alist-serialize (exp)
   (s-join " " (-map #'shroud--k+v->string (alist-get 'contents exp))))
 
 (defun shroud--hide-alist (exp)
+  "Fix s-split, blocks from adding spaces anywhere. Though spaces
+might fail further down the program."
   (if (shroud--find (alist-get 'id exp))
-      (shroud--hide-edit (alist-get 'id exp) (shroud-alist-serialize exp))
-    (shroud--hide (alist-get 'id exp) (shroud-alist-serialize exp))))
+      (apply #'shroud--hide-edit
+             (alist-get 'id exp)
+             (s-split " " (shroud-alist-serialize exp)))
+    (apply #'shroud--hide
+           (alist-get 'id exp)
+           (s-split " " (shroud-alist-serialize exp)))))
 
 (defun shroud-save-entry (&optional exp)
   (interactive)
   (shroud--hide-alist
-   (or exp (with-current-buffer buff
+   (or exp (with-current-buffer (current-buffer)
                                 (read (buffer-string))))))
 
 (defun shroud--make-entry-buffer (entry)
@@ -423,7 +430,7 @@ Optionally DB-FILE is the file you want to read."
           (generate-new-buffer buffer)
           (switch-to-buffer-other-window buffer)
           (with-current-buffer buffer
-            (scheme-mode)
+            (emacs-lisp-mode)
             (shroud-edit-entry-minor-mode)
             (insert (format "%s" shroud--alist))))
          (message (format "Shroud: editing %s , when finished Press C-c C-s" entry)))))
@@ -446,16 +453,15 @@ Optionally DB-FILE is the file you want to read."
           (generate-new-buffer buffer)
           (switch-to-buffer-other-window buffer)
           (with-current-buffer buffer
-            (scheme-mode)
+            (emacs-lisp-mode)
             (shroud-edit-entry-minor-mode)
             (insert (format "%s" shroud--alist))))
          (message (format "Shroud: editing %s , when finished Press C-c C-s" entry)))))
 
 (defun shroud-list-add-entry ()
   (interactive)
-  (let ((entry (bui-list-current-id)))
-    (and (shroud-list-add-entry--internal entry)
-       (message (concat "TODO: Add " entry)))))
+  (and (shroud-list-add-entry--internal)
+       (message (concat "TODO: Add "))))
 
 
 ;;;###autoload
