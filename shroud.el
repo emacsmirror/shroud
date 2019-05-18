@@ -336,23 +336,127 @@ Optionally DB-FILE is the file you want to read."
 (let ((map shroud-list-mode-map))
   (define-key map (kbd "c") 'shroud-list-copy-current-entry-pass)
   (define-key map (kbd "d")   'shroud-list-remove-current-entry)
-  (define-key map (kbd "e")   'shroud-list-edit-current-entry))
+  (define-key map (kbd "e")   'shroud-list-edit-current-entry)
+  (define-key map (kbd "a")   'shroud-list-add-entry)
+  (define-key map (kbd "w")   'shroud-list-copy-current-entry-url)
+  (define-key map (kbd "I")   'shroud-list-copy-current-entry-username))
 
 (defun shroud-list-copy-current-entry-pass ()
   (interactive)
   (and (kill-new (shroud--show-password (bui-list-current-id)))
        (message "Password copied")))
 
+(defun shroud-list-copy-current-entry-url ()
+  (interactive)
+  (and (kill-new (shroud--show-url (bui-list-current-id)))
+       (message "Url copied")))
+
+(defun shroud-list-copy-current-entry-username ()
+  (interactive)
+  (and (kill-new (shroud--show-username (bui-list-current-id)))
+       (message "Username copied")))
+
 (defun shroud-list-remove-current-entry ()
   (interactive)
   (and (shroud--remove (bui-list-current-id))
        (message "Entry deleted")))
 
+(defvar shroud-edit-entry-minor-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "C-c C-s") 'shroud-save-entry)
+    map))
+
+;;; Editing is a bit more involved
+(define-minor-mode shroud-edit-entry-minor-mode
+  "Minor mode for editing shroud entry"
+  :init-value nil
+  :group 'shroud
+  :lighter " Shroud-edit"
+  :require 'shroud
+  :keymap shroud-edit-entry-minor-mode-map
+  )
+
+(defcustom shroud--alist
+  '((id . "")
+    (contents .
+              ((username . "")
+               (password . "")
+               (url . "")
+               (notes . ()))))
+  "Shroud alist format")
+
+(defun shroud--k+v->string (pair)
+  (if (not (-cons-pair? (cdr pair)))
+      (format "%s=%s" (car pair) (cdr pair))
+    (format "%s=%s" (car pair) (shroud--k+v->string (cdr pair)))))
+
+(defun shroud-alist-serialize (exp)
+  (s-join " " (-map #'shroud--k+v->string (alist-get 'contents exp))))
+
+(defun shroud--hide-alist (exp)
+  (if (shroud--find (alist-get 'id exp))
+      (shroud--hide-edit (alist-get 'id exp) (shroud-alist-serialize exp))
+    (shroud--hide (alist-get 'id exp) (shroud-alist-serialize exp))))
+
+(defun shroud-save-entry (&optional exp)
+  (interactive)
+  (shroud--hide-alist
+   (or exp (with-current-buffer buff
+                                (read (buffer-string))))))
+
+(defun shroud--make-entry-buffer (entry)
+  (concat "*shroud-edit*-" entry))
+
+(defun shroud--make-buffer-entry (buffer)
+  (car (s-split "<" (substring buffer (length "*shroud-edit*-")))))
+
+(defun shroud-list-edit-current-entry--internal (&optional entry)
+  (interactive)
+  (let* ((entry (or entry (bui-list-current-id)))
+        (buffer (generate-new-buffer-name (shroud--make-entry-buffer entry))))
+    (and
+     (progn
+          ;; open the entry in a new buffer
+          ;; allow the user to make changes
+          ;; when user saves C-x C-s then
+          ;; 1. save the entry 2. discard the buffer
+          (generate-new-buffer buffer)
+          (switch-to-buffer-other-window buffer)
+          (with-current-buffer buffer
+            (scheme-mode)
+            (shroud-edit-entry-minor-mode)
+            (insert (format "%s" shroud--alist))))
+         (message (format "Shroud: editing %s , when finished Press C-c C-s" entry)))))
+
 (defun shroud-list-edit-current-entry ()
   (interactive)
   (let ((entry (bui-list-current-id)))
-    (and (shroud--show-entry entry)
+    (and (shroud-list-edit-current-entry--internal entry)
        (message (concat "TODO: Edit " entry)))))
+
+(defun shroud-list-add-entry--internal (&optional entry)
+  (interactive)
+  (let* ((buffer (generate-new-buffer-name (shroud--make-entry-buffer "new"))))
+    (and
+     (progn
+          ;; open the entry in a new buffer
+          ;; allow the user to make changes
+          ;; when user saves C-x C-s then
+          ;; 1. save the entry 2. discard the buffer
+          (generate-new-buffer buffer)
+          (switch-to-buffer-other-window buffer)
+          (with-current-buffer buffer
+            (scheme-mode)
+            (shroud-edit-entry-minor-mode)
+            (insert (format "%s" shroud--alist))))
+         (message (format "Shroud: editing %s , when finished Press C-c C-s" entry)))))
+
+(defun shroud-list-add-entry ()
+  (interactive)
+  (let ((entry (bui-list-current-id)))
+    (and (shroud-list-add-entry--internal entry)
+       (message (concat "TODO: Add " entry)))))
+
 
 ;;;###autoload
 (defun shroud-bui ()
