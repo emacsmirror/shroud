@@ -329,7 +329,7 @@ Optionally DB-FILE is the file you want to read."
   `((name . ,a)
     (id . ,a)))
 
-(defun entry->shroud-entry (a)
+(defun shroud--entry->shroud-entry (a)
   (alist-get 'name a))
 
 (defun shroud-get-entries (&rest args)
