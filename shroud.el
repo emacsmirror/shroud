@@ -52,10 +52,8 @@
   :group 'shroud
   :type 'executable)
 
-(defcustom shroud-database-file (or
-                                 (concat (getenv "HOME")
-					 "/.config/shroud/db.gpg")
-                                 nil)
+(defcustom shroud-database-file (concat (getenv "HOME")
+					"/.config/shroud/db.gpg")
   "Shroud Datastore file.
 
 GPG Encrypted."
