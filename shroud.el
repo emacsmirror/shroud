@@ -33,6 +33,7 @@
 (require 'f)
 (require 'bui)
 (require 'epg)
+(require 'shroud-el)
 
 (defgroup shroud '()
   "Interface for shroud password manager"
@@ -93,7 +94,13 @@ Nil arguments will be ignored.  Returns the output on success,  or
           (s-trim (buffer-string))
         (error (s-trim (buffer-string)))))))
 
-(defalias 'shroud--run 'shroud--run-internal)
+(defmacro shroud--init ()
+  "Run shroud on ARGS."
+  (if shroud-executable
+      `(defalias 'shroud--run 'shroud--run-internal)
+    `(defalias 'shroud--run (-partial #'shroud-el-run (or shroud-database-file)))))
+
+(shroud--init)
 
 ;;; Help
 (defun shroud--help (&rest sub-entry)
