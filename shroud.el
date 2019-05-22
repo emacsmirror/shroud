@@ -47,7 +47,7 @@
   :group 'shroud
   :type 'number)
 
-(defcustom shroud-executable (or (executable-find "shroud") nil)
+(defcustom shroud-executable (executable-find "shroud")
   "Shroud executable."
   :group 'shroud
   :type 'executable)
