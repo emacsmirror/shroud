@@ -30,10 +30,12 @@
 
 ;;; Code:
 
-(require 'f)
 (require 'bui)
 (require 'epg)
+(require 's)
+(require 'dash)
 (require 'shroud-el)
+(require 'dash-functional)
 
 (defgroup shroud '()
   "Interface for shroud password manager"
