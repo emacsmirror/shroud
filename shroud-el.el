@@ -190,12 +190,9 @@ Optional ENCODING for the file."
 Shroud entry function."
   (cl-labels ((db () (read (shroud-el--file-contents db-file)))
             (entry-name (e) (funcall (-cut shroud-el--entry-get 'id <>) e))
-            (entry-names () (-map #'entry-name (db)))
             (entry-contents (e) (funcall (-cut shroud-el--entry-get 'entry <>) e))
-            (assoc-get (a b) (funcall (-cut alist-get <> <> nil nil #'equal) a b))
             (check  (a b) (equal a (car b)))
             (query-car (q) (-partial #'check q))
-            (find-entry (a db) (-find #'(lambda (e) (equal (entry-name e) a)) (db))))
     (pcase args
       (`("list" . ,a) (entry-names))
       (`("list" . ,a) (-filter (apply #'-orfn (-map #'shroud-el--query a)) (entry-names)))
