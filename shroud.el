@@ -52,8 +52,10 @@
   :group 'shroud
   :type 'executable)
 
-(defcustom shroud-database-file (or (concat (getenv "HOME")
-					    "/.config/shroud/db.gpg"))
+(defcustom shroud-database-file (or
+                                 (concat (getenv "HOME")
+					 "/.config/shroud/db.gpg")
+                                 nil)
   "Shroud Datastore file.
 
 GPG Encrypted."
@@ -101,8 +103,6 @@ Nil arguments will be ignored.  Returns the output on success,  or
   (if shroud-executable
       `(defalias 'shroud--run 'shroud--run-internal)
     `(defalias 'shroud--run (-partial #'shroud-el-run (or shroud-database-file)))))
-
-(shroud--init)
 
 ;;; Help
 (defun shroud--help (&rest sub-entry)
