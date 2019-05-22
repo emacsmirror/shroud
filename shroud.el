@@ -5,7 +5,7 @@
 ;;; Author: Amar Singh <nly@disroot.org>
 ;;; Homepage: http://git.nly.info.tm:9001/shroud.git
 ;;; Package-Version: 1.12
-;;; Package-Requires: ((emacs "24") (f "0.20") (bui "1.2.0") (epg "1.0.0"))
+;;; Package-Requires: ((emacs "25") (f "0.20") (bui "1.2.0") (epg "1.0.0"))
 ;;; Keywords: tools, password management
 
 ;; This program is free software; you can redistribute it and/or modify
