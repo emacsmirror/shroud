@@ -6,10 +6,44 @@
   Beta quality, as of the last commit.
 ** Provides
    - Eshell functions to operate the Shroud command line interface.
-   - An Elisp reader for the Shroud database in `db.gpg`
+   - An Elisp implementation of Shroud, switching transparently.
    - A Buffers User Interface to view entries in the database
      `shroud-bui'.
 
 ** For a quick start
    - M-x shroud
    - (global-set-key (kbd "C-c p") 'shroud)
+
+* Installation
+** with guix
+   To install, simply clone the repo, or download just the `guix.scm` file.
+   #+begin_src shell
+    git clone https://github.com/o-nly/emacs-shroud.git
+    cd emacs-shroud
+    guix package -i guix.scm
+   #+end_src
+** from git
+   #+begin_src emacs-lisp
+    (push (directory-file-name "/path/to/emacs-shroud/") load-path)
+    (require 'shroud)
+   #+end_src
+** from Melpa
+   The easiest way is to use MELPA, and just type
+   =M-x package-install RET shroud= inside Emacs.
+
+* Configuration
+   To initialize shroud.
+   #+begin_src emacs-lisp
+    (shroud--init)
+   #+end_src
+
+** Sample Shroud Config
+   =$HOME/.shroud= or M-x customize-group shroud
+   #+begin_src emacs-lisp
+    '((user-id . "AAOEUOEUP12323"))
+   #+end_src
+** Sample Shroud Database
+   #+begin_src emacs-lisp
+    ;; -*- epa-file-encrypt-to: ("AAOEUOEUP12323") -*-
+    (((id . "my-bank") (contents  ("password" . "hackme") ("username" . "pwned") ...)) ...)
+   #+end_src
