@@ -80,11 +80,7 @@ GPG Encrypted."
   :group 'shroud
   :type 'file)
 
-(defcustom shroud-el--gpg-key
-  (or (and shroud-el--config-file
-           (pcase-let ((`(_ ,a) (read (shroud-el--file-contents shroud-el--config-file))))
-             (alist-get 'user-id a)))
-      nil)
+(defcustom shroud-el--gpg-key nil
   "Shroud GPG Key."
   :group 'shroud
   :type 'file)
