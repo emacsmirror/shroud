@@ -99,7 +99,7 @@ Nil arguments will be ignored.  Returns the output on success,  or
 (defun shroud--help (&rest sub-entry)
   "Return shroud help strings.
 SUB-ENTRY is passed straight to shroud."
-  (apply #'shroud--run (car sub-entry) "--help" '()))
+  (apply #'shroud--run `(,@sub-entry "--help")))
 
 (defun shroud--help--list ()
   "Return help strings for shroud list."
