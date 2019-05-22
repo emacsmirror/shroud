@@ -69,19 +69,13 @@
     (insert-file-contents filename)
     (buffer-string)))
 
-(defcustom shroud-el--database-file
-  (let ((default (shroud-el--~ ".config/shroud/db.gpg"))) ; the default location
-    (or (and (f-file? default) default)         ; if exists then use it
-        (and (make-directory (f-dirname default) t) (f-touch default)))) ; otherwise make the file and directory
+(defcustom shroud-el--database-file (shroud-el--~ ".config/shroud/db.gpg") ; otherwise make the file and directory
   "Shroud Datastore file.
 GPG Encrypted."
   :group 'shroud
   :type 'file)
 
-(defcustom shroud-el--config-file
-  (let ((default (shroud-el--~ ".shroud")))
-    (or (and (f-file? default) default)
-        (and (make-directory (f-dirname default) t) (f-touch default))))
+(defcustom shroud-el--config-file (shroud-el--~ ".shroud")
   "Shroud Config file."
   :group 'shroud
   :type 'file)
