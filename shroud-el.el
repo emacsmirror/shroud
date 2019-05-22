@@ -193,9 +193,15 @@ Shroud entry function."
             (entry-contents (e) (funcall (-cut shroud-el--entry-get 'entry <>) e))
             (check  (a b) (equal a (car b)))
             (query-car (q) (-partial #'check q))
+            (query-name (x y) (s-matches? x (entry-name y)))
+            (make-query (q) (-partial #'query-name q)))
     (pcase args
-      (`("list" . ,a) (entry-names))
-      (`("list" . ,a) (-filter (apply #'-orfn (-map #'shroud-el--query a)) (entry-names)))
+      (`("list") (db))
+      (`("list" . ,a) (-filter (apply #'-orfn
+                                      (-map #'make-query a))
+                               (db)))
+      (`("show" ,a)
+       (-find #'(lambda (e) (equal (entry-name e) a)) (db)))
       (`("show" ,a . ,rest)
        (let ((entry (-find #'(lambda (e) (equal (entry-name e) a)) (db))))
          (if rest (-filter (apply #'-orfn (-map #'query-car rest)) (entry-contents entry))
