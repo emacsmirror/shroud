@@ -102,6 +102,8 @@ Nil arguments will be ignored.  Returns the output on success,  or
       `(defalias 'shroud--run 'shroud--run-internal)
     `(defalias 'shroud--run (-partial #'shroud-el-run (or shroud-database-file)))))
 
+(shroud--init)
+
 ;;; Help
 (defun shroud--help (&rest sub-entry)
   "Return shroud help strings.
