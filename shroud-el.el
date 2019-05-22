@@ -197,8 +197,6 @@ Shroud entry function."
             (query-car (q) (-partial #'check q))
             (find-entry (a db) (-find #'(lambda (e) (equal (entry-name e) a)) (db))))
     (pcase args
-      (`("--help" . ,_) "Help unavailable, have you installed shroud?")
-      (`(,(or "list" "show" "hide" "remove" a) "--help" . ,_) "Options are: list | show | remove | hide")
       (`("list" . ,a) (-filter (apply #'-orfn (-map #'shroud-el--query a)) (entry-names)))
       (`("show" ,a . ,rest)
        (let ((entry (-find #'(lambda (e) (equal (entry-name e) a)) (db))))
@@ -207,8 +205,7 @@ Shroud entry function."
       (`("hide" ,a)
        (if (and (shroud-el--entry? a)
                 (not (shroud-el--entry-exists? a (db))))
-           (shroud-el--write-file (lambda () (cons a (db))) db-file)
-         "Not a valid entry or already exists."))
+           (shroud-el--write-file (lambda () (cons a (db))) db-file)))
       (`("hide" "--edit" ,a)
        (if (and (shroud-el--entry? a)
                 (shroud-el--entry-exists? a (db)))
