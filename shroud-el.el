@@ -197,6 +197,7 @@ Shroud entry function."
             (query-car (q) (-partial #'check q))
             (find-entry (a db) (-find #'(lambda (e) (equal (entry-name e) a)) (db))))
     (pcase args
+      (`("list" . ,a) (entry-names))
       (`("list" . ,a) (-filter (apply #'-orfn (-map #'shroud-el--query a)) (entry-names)))
       (`("show" ,a . ,rest)
        (let ((entry (-find #'(lambda (e) (equal (entry-name e) a)) (db))))
