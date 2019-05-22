@@ -176,8 +176,8 @@ Optional ENCODING for the file."
 
 (defun shroud-el--entry? (entry)
   "Check if the ENTRY is a valid shroud-el--entry."
-  (and (shroud-el--entry-get 'id entry)
-       (shroud-el--entry-get 'contents entry) t))
+  (pcase entry
+    (`((id . ,id) (contents . ,contents)) t)))
 
 (defun shroud-el--entry-exists? (entry-name db)
   "Check if the ENTRY-NAME is a valid shroud-el--entry not already present in DB."
