@@ -185,7 +185,7 @@ Optional ENCODING for the file."
               (-map (-cut shroud-el--entry-get 'id <>) db))
        t))
 
-(defun shroud-el-run (db-file &rest args)
+(defun shroud-el--run (db-file &rest args)
   "Run shroud on DB-FILE with ARGS.
 Shroud entry function."
   (cl-labels ((db () (read (shroud-el--file-contents db-file)))
@@ -225,6 +225,18 @@ Shroud entry function."
                                              (not (equal (entry-name c) a)))
                                          (db)))
                               db-file)))))
+
+(defun shroud-el-run (db-file &rest args)
+  "Run shroud on DB-FILE with ARGS.
+Shroud user entry function."
+  (pcase args
+    (`(,(or "--help" "-h") . ,_) "Usage: shroud COMMAND ARGS. COMMAND may be one of:\nlist | show | remove | hide")
+    (`("--version" . ,_) "1.12")
+    (`("list" ,(or "--help" "-h") . ,_) "Usage: shroud list [OPTION]\nShow the names of all secrets in the database.")
+    (`("show" ,(or "--help" "-h") . ,_) "Usage: shroud show [OPTION] ID [KEY ...]\nShow secret named ID.")
+    (`("hide" ,(or "--help" "-h") . ,_) "Usage: shroud hide [OPTION] ID KEY=VALUE ...\nAdd a new secret named ID to the database.")
+    (`("remove" ,(or "--help" "-h") . ,_) "Usage: shroud remove [OPTION] id\nRemove a secret from the database.")
+    (_ (apply (-partial #'shroud-el--run db-file) args))))
 
 (provide 'shroud-el)
 
