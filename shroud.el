@@ -152,7 +152,7 @@ Otherwise, you can pass the ARGS as STRING."
 (defun shroud--show-entry (entry)
   "Return the results of ‘shroud--show’ ENTRY in Lisp lists."
   (mapcar #'(lambda (x) (split-string x " "))
-          (mapcar #'(lambda (s) (replace-regexp-in-string "[ \t\n\r]+" " " s))
+          (mapcar #'s-collapse-whitespace
                   (split-string (shroud--show entry) "\n"))))
 
 (defun shroud--show-sub-entries (entry &rest sub-entry)
