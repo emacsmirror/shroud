@@ -156,13 +156,13 @@ Optional ENCODING for the file."
   (cl-labels ((assoc-get (a b) (alist-get a b nil nil #'equal)))
     (pcase-let*
         ((`((id . ,id) (contents . ,contents)) shroud-entry)
-         (als `((id . ,id) ,contents)))
+         (entry `((id . ,id) (name . ,id) ,@contents)))
       (pcase key
         (`all shroud-entry)
         (`id id)
         (`contents contents)
-        (`entry `((id . ,id) (name . ,id) ,@contents))
-        (_ (assoc-get key als))))))
+        (`entry entry)
+        (_ (assoc-get key entry))))))
 
 (defun shroud-el--entry? (entry)
   "Check if the ENTRY is a valid shroud-el--entry."
