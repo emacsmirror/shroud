@@ -229,7 +229,7 @@ Shroud entry function."
 Shroud user entry function."
   (pcase args
     (`(,(or "--help" "-h") . ,_) "Usage: shroud COMMAND ARGS. COMMAND may be one of:\nlist | show | remove | hide")
-    (`("--version" . ,_) "1.12")
+    (`("--version" . ,_) "shroud-el 1.12\nCopyright (C) 2019 Amar Singh\nGPLv3 or later")
     (`("list" ,(or "--help" "-h") . ,_) "Usage: shroud list [OPTION]\nShow the names of all secrets in the database.")
     (`("show" ,(or "--help" "-h") . ,_) "Usage: shroud show [OPTION] ID [KEY ...]\nShow secret named ID.")
     (`("hide" ,(or "--help" "-h") . ,_) "Usage: shroud hide [OPTION] ID KEY=VALUE ...\nAdd a new secret named ID to the database.")
