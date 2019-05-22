@@ -161,17 +161,17 @@ Optional ENCODING for the file."
    "Build a query Procedure for querying Q."
   (-partial #'s-matches? q))
 
-(defun shroud-el--entry-get (key shroud-el--entry)
+(defun shroud-el--entry-get (key shroud-entry)
   "Get KEY from SHROUD-EL--ENTRY."
   (cl-labels ((assoc-get (a b) (alist-get a b nil nil #'equal)))
-    (pcase-let* ((`(,id ,contents) shroud-el--entry)
-                 (`(_ . ,name) id)
-                 (als `(,id ,@(rest contents))))
+    (pcase-let*
+        ((`((id . ,id) (contents . ,contents)) shroud-entry)
+         (als `((id . ,id) ,contents)))
       (pcase key
-        (`all shroud-el--entry)
-        (`id name)
-        (`contents (rest contents))
-        (`entry `(,id (name . ,name) ,@(assoc-get 'contents shroud-el--entry)))
+        (`all shroud-entry)
+        (`id id)
+        (`contents contents)
+        (`entry `((id . ,id) (name . ,id) ,@contents))
         (_ (assoc-get key als))))))
 
 (defun shroud-el--entry? (entry)
