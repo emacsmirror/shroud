@@ -96,11 +96,11 @@ Nil arguments will be ignored.  Returns the output on success,  or
           (s-trim (buffer-string))
         (error (s-trim (buffer-string)))))))
 
-(defmacro shroud--init ()
+(defun shroud--init ()
   "Run shroud on ARGS."
   (if shroud-executable
-      `(defalias 'shroud--run 'shroud--run-internal)
-    `(defalias 'shroud--run (-partial #'shroud-el-run (or shroud-database-file)))))
+      (defalias 'shroud--run 'shroud--run-internal)
+    (defalias 'shroud--run (-partial #'shroud-el-run (or shroud-database-file)))))
 
 (shroud--init)
 
