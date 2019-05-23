@@ -70,6 +70,16 @@
     (buffer-string)))
 
 (defcustom shroud-el--database-file (shroud-el--~ ".config/shroud/db.gpg") ; otherwise make the file and directory
+(defun shroud-el--read-config (key filename)
+  (let ((cfg (read (shroud-el--file-contents filename))))
+    (pcase-let*
+        ((`(quote ,contents) cfg)
+         (user-id (alist-get 'user-id contents)))
+      (pcase key
+        ('user-id user-id)
+        ('contents contents)
+        (t "nothing")))))
+
   "Shroud Datastore file.
 GPG Encrypted."
   :group 'shroud
@@ -85,28 +95,21 @@ GPG Encrypted."
   :group 'shroud
   :type 'file)
 
-(defcustom shroud-el--epg-key
-  (or (and shroud-el--gpg-key
-           (epg-list-keys (epg-make-context 'OpenPGP)
-            shroud-el--gpg-key))
-      nil)
-  "Shroud EPG Key."
   :group 'shroud
   :type 'file)
-
-(defcustom shroud-el--file-encrypt-to
-  (or (and shroud-el--gpg-key
-           (concat ";; -*- epa-file-encrypt-to: (\"" shroud-el--gpg-key "\") -*-"))
-      "")
-  "Automatically encrypt to for this key without prompting."
-  :group 'shroud
-  :type 'gpg-key-id)
 
 (defun shroud-el--write-file (reader filename)
   "Write the output of READER to FILENAME."
   (with-temp-buffer
     (if (s-suffix? ".gpg" filename)
-        (progn (insert (format "%s\n" shroud-el--file-encrypt-to))))
+        (cl-labels ((fmt (s) (format ";; -*- epa-file-encrypt-to: (\"%s\") -*-\n" s)))
+          (insert (cond
+                   (shroud-el--gpg-key
+                    (fmt shroud-el--gpg-key))
+                   ((file-exists-p shroud-el--config-file)
+                    (fmt (shroud-el--read-config 'user-id
+                                                 shroud-el--config-file)))
+                   (t "\n")))))
     (insert (format "%S" (funcall reader)))
     (write-file filename)))
 
