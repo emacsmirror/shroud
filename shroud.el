@@ -278,16 +278,16 @@ Optionally DB-FILE is the file you want to read."
   ;; This function can read a shroud db from a file.
   (let* ((db (shroud--read-db)))
     (cl-labels
-        ((flatten-contents (x) (rest (first x)))
+        ((flatten-contents (x) (cdr (car x)))
          (name-from-id (x)
-                       (cons (if (equal (first x) 'id)
+                       (cons (if (equal (car x) 'id)
                                  'name
-                               (first x))
-                             (rest x))))
+                               (car x))
+                             (cdr x))))
       (mapcar
-       #'(lambda (x) (cons (first x)
-                      (cons (name-from-id (first x))
-                            (flatten-contents (rest x)))))
+       #'(lambda (x) (cons (car x)
+                      (cons (name-from-id (car x))
+                            (flatten-contents (cdr x)))))
        db))))
 
 ;;; This is the interface for defining a BUI interface. It has a
