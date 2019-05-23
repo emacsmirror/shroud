@@ -100,7 +100,8 @@ Nil arguments will be ignored.  Returns the output on success,  or
   "Run shroud on ARGS."
   (if shroud-executable
       (defalias 'shroud--run 'shroud--run-internal)
-    (defalias 'shroud--run (-partial #'shroud-el-run (or shroud-database-file)))))
+    (defalias 'shroud--run (-partial #'shroud-el-run (or shroud-el--database-file
+                                                         shroud-database-file)))))
 
 (shroud--init)
 
