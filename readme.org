@@ -1,22 +1,41 @@
 * Emacs-Shroud Interface
-  Shroud is a password manager written in Guile which uses GnuPG in the
-  backend. This package is an Emacs interface to Shroud using the Buffers
-  User Interface library.
+  Shroud is a password manager written in Guile which uses GnuPG in
+  the backend. See Shroud's website at [[https://dthompson.us/projects/shroud.html][this link.]] This package is an
+  Emacs interface to Shroud using the Buffers User Interface library.
 
-  Beta quality, as of the last commit.
-** Provides
-   - Eshell functions to operate the Shroud command line interface.
-   - An Elisp implementation of Shroud, switching transparently.
-   - A Buffers User Interface to view entries in the database
-     `shroud-bui'.
+  Shroud stores secrets as a plain text encrypted using
+  GnuPG. Particularly, in Lisp's S-expressions, some form of
+  associaton lists. This provides the dual benefit that, the file is
+  trivial to parse by machine, yet at the same time is perfectly
+  usable as just a text file (after decryption ofcourse!).
+
+  You can view, copy and edit secrets from Emacs.
+
+** Features
+   - Elisp procedures to operate the Shroud command line interface.
+   - An Elisp implementation of Shroud, using EPG and dash.
+   - A Buffers User Interface to view entries in the database.
 
 ** For a quick start
    - M-x shroud
    - (global-set-key (kbd "C-c p") 'shroud)
+   - Keybinds: To view the keybinding press =C-h m= in the *Shroud*
+     Buffer
+   |-----+---------------------|
+   | Key | Action              |
+   |-----+---------------------|
+   | c   | copy password       |
+   | I   | copy username       |
+   | a   | add new entry       |
+   | d   | delete entry        |
+   | g   | refresh buffer      |
+   | e   | edit entry at point |
+   |-----+---------------------|
 
 * Installation
 ** with guix
-   To install, simply clone the repo, or download just the `guix.scm` file.
+   To install, simply clone the repo, or download file =guix.scm= and
+   build the package =emacs-shroud= present in =guix.scm=.
    #+begin_src shell
     git clone https://github.com/o-nly/emacs-shroud.git
     cd emacs-shroud
@@ -28,15 +47,31 @@
     (require 'shroud)
    #+end_src
 ** from Melpa
-   The easiest way is to use MELPA, and just type
+   The easiest way to install is to use MELPA, and just type:
    =M-x package-install RET shroud= inside Emacs.
 
 * Configuration
-   To initialize shroud.
-   #+begin_src emacs-lisp
-    (shroud--init)
-   #+end_src
+  Shroud's configuration options can be changed in the =$HOME/.shroud=
+  file. The default database is located in =~/.config/shroud/db.gpg=.
 
+  However, Emacs-shroud also includes an elisp implementation of
+  Shroud. It can be configured to use the same defaults as Shroud.
+  #+begin_src emacs-lisp
+    (setq shroud-el--database-file "~/.config/shroud/db.gpg")
+    (setq shroud-el--config-file "~/.shroud")
+    (setq shroud-el--gpg-key "A1761FE275883XXX")
+  #+end_src
+  If gpg-key is not set and no configuration file is found Shroud may
+  prompt you to choose a key each time you edit the database(remember
+  it's just alists)
+  You can choose to use the elisp implementation only with this bit of Elisp.
+  #+begin_src emacs-lisp
+    (setq shroud-executable nil)
+    (shroud--init)
+  #+end_src
+  If the shroud-executable is nil shroud--init will setup accordingly.
+
+* Examples
 ** Sample Shroud Config
    =$HOME/.shroud= or M-x customize-group shroud
    #+begin_src emacs-lisp
