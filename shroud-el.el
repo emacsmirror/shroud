@@ -164,7 +164,7 @@ Optional ENCODING for the file."
         (`name id)
         (`contents contents)
         (`entry entry)
-        (_ (assoc-get key entry))))))
+        (_ (assoc key entry))))))
 
 (defun shroud-el--entry? (entry)
   "Check if the ENTRY is a valid shroud-el--entry."
