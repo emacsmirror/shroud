@@ -4,8 +4,8 @@
 
 ;;; Author: Amar Singh <nly@disroot.org>
 ;;; Homepage: http://git.nly.info.tm:9001/shroud.git
-;;; Package-Version: 1.12
-;;; Package-Requires: ((emacs "25") (f "0.20") (bui "1.2.0") (epg "1.0.0"))
+;;; Package-Version: 1.15
+;;; Package-Requires: ((emacs "25") (epg "1.0.0") (s "1.6.0") (bui "1.2.0") (dash "2.15.0") (dash-functional "2.15.0"))
 ;;; Keywords: tools, password management
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -30,12 +30,12 @@
 
 ;;; Code:
 
-(require 'bui)
 (require 'epg)
+(require 'bui)
 (require 's)
 (require 'dash)
-(require 'shroud-el)
 (require 'dash-functional)
+(require 'shroud-el)
 
 (defgroup shroud '()
   "Interface for shroud password manager"

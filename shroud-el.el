@@ -4,9 +4,9 @@
 
 ;;; Author: Amar Singh <nly@disroot.org>
 ;;; Homepage: http://git.nly.info.tm:9001/shroud.git
-;;; Package-Version: 1.12
+;;; Package-Version: 1.15
 ;;; Keywords: tools, password management
-;;; Package-Requires: ((epg "1.0.0") (dash "2.15.0") (emacs "25") (f "0.20"))
+;;; Package-Requires: ((epg "1.0.0") (emacs "25") (s "1.6.0") (dash "2.15.0") (dash-functional "2.15.0"))
 
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -53,15 +53,15 @@
 
 ;;; Code:
 
-(require 'f)
 (require 'epg)
+(require 'cl-macs)
+(require 's)
 (require 'dash)
 (require 'dash-functional)
-(require 'cl-macs)
 
 (defun shroud-el--~ (file)
   "Find FILE in user HOME."
-    (f-join (getenv "HOME") file))
+    (concat (getenv "HOME") "/" file))
 
 (defun shroud-el--file-contents (filename)
   "Return the contents of FILENAME."
