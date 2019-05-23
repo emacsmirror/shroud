@@ -161,6 +161,7 @@ Optional ENCODING for the file."
       (pcase key
         (`all shroud-entry)
         (`id id)
+        (`name id)
         (`contents contents)
         (`entry entry)
         (_ (assoc-get key entry))))))
