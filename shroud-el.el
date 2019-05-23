@@ -77,6 +77,7 @@
       (pcase key
         ('user-id user-id)
         ('contents contents)
+        ('all cfg)
         (_ "nothing")))))
 
 (defcustom shroud-el--database-file nil
