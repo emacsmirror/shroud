@@ -85,16 +85,13 @@ GPG Encrypted."
   :group 'shroud
   :type 'file)
 
-(defcustom shroud-el--config-file (shroud-el--~ ".shroud")
-  "Shroud Config file."
-  :group 'shroud
-  :type 'file)
-
 (defcustom shroud-el--gpg-key nil
   "Shroud GPG Key."
   :group 'shroud
   :type 'file)
 
+(defcustom shroud-el--config-file (shroud-el--~ ".shroud")
+  "Shroud Config file."
   :group 'shroud
   :type 'file)
 
