@@ -77,7 +77,7 @@
       (pcase key
         ('user-id user-id)
         ('contents contents)
-        (t "nothing")))))
+        (_ "nothing")))))
 
 (defcustom shroud-el--database-file nil
   "Shroud Datastore file.
