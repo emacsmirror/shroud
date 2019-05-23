@@ -69,7 +69,6 @@
     (insert-file-contents filename)
     (buffer-string)))
 
-(defcustom shroud-el--database-file (shroud-el--~ ".config/shroud/db.gpg") ; otherwise make the file and directory
 (defun shroud-el--read-config (key filename)
   (let ((cfg (read (shroud-el--file-contents filename))))
     (pcase-let*
@@ -80,6 +79,7 @@
         ('contents contents)
         (t "nothing")))))
 
+(defcustom shroud-el--database-file nil
   "Shroud Datastore file.
 GPG Encrypted."
   :group 'shroud
