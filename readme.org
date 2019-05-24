@@ -4,10 +4,10 @@
   Emacs interface to Shroud using the Buffers User Interface library.
 
   Shroud stores secrets as a plain text encrypted using
-  GnuPG. Particularly, in Lisp's S-expressions, some form of
+  GnuPG. Particularly, in Lisp's S-expressions, in a form of
   associaton lists. This provides the dual benefit that, the file is
-  trivial to parse by machine, yet at the same time is perfectly
-  usable as just a text file (after decryption ofcourse!).
+  trivial to parse by machine, yet at the same time, is perfectly
+  readable/editable by a human.
 
   You can view, copy and edit secrets from Emacs.
 
