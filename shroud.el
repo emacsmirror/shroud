@@ -1,4 +1,4 @@
-;;; shroud.el --- Interface for Shroud
+;;; shroud.el --- Shroud secrets
 
 ;; Copyright (C) 2019  Amar Singh
 
