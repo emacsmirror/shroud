@@ -220,6 +220,28 @@ Shroud entry function."
                                          (db)))
                               db-file)))))
 
+(defun shroud-el--entry->output-string (e)
+  "ENTRY E."
+  (s-join "\n"
+          (-map #'(lambda (pair)
+                    (concat (car pair) " " (cdr pair)))
+                (shroud-el--entry-get 'contents e))))
+
+(defun shroud-el--entry->input-string (e)
+  (s-join " "
+          (cons (shroud-el--entry-get 'name e)
+                (-map #'(lambda (pair)
+                          (concat (car pair) "=" (cdr pair)))
+                      (shroud-el--entry-get 'contents e)))))
+
+(defun shroud-el--input-string->shroud-entry (entry-input-string &optional split? seperator)
+  "ENTRY-INPUT-STRING SPLIT? SEPERATOR."
+  (let ((s (if split? (s-split (or seperator " ") entry-input-string) entry-input-string)))
+    (cl-labels ((split-cons (str) (let ((s (s-split "=" str)))
+                                      (cons (car s) (cadr s)))))
+      `((id . ,(car s))
+        (contents ,@(-map #'split-cons (cdr s)))))))
+
 (defun shroud-el-run (db-file &rest args)
   "Run shroud on DB-FILE with ARGS.
 Shroud user entry function."
