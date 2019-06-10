@@ -254,6 +254,7 @@ Shroud user entry function."
     (`("remove" ,(or "--help" "-h") . ,_) "Usage: shroud remove [OPTION] id\nRemove a secret from the database.")
     (`("hide" "--edit" . ,e) (apply (-partial #'shroud-el--run db-file) "hide" "--edit" (shroud-el--input-string->shroud-entry e) '()))
     (`("hide" .  ,e) (apply (-partial #'shroud-el--run db-file) "hide" (shroud-el--input-string->shroud-entry e) '()))
+    (`("show" "--clipboard" ,e . ,fields) (kill-new (s-join "\n" (-map #'cdr (apply (-partial #'shroud-el--run db-file) "show" e fields)))))
     (_  (let ((res (apply (-partial #'shroud-el--run db-file) args)))
           (cond
            ((shroud-el--entry? (car res)) (mapconcat 'identity (-map (-cut shroud-el--entry-get 'id <>) res) "\n"))
