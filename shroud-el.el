@@ -188,6 +188,8 @@ Shroud entry function."
             (query-name (x y) (s-matches? x (entry-name y)))
             (make-query (q) (-partial #'query-name q)))
     (pcase args
+      (`(db ,fn) (funcall fn (db)))
+      (`(entry ,entry ,fn) (funcall fn (-find #'(lambda (e) (equal (entry-name e) entry)) (db))))
       (`("list") (db))
       (`("list" . ,a) (-filter (apply #'-orfn
                                       (-map #'make-query a))
