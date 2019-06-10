@@ -255,9 +255,7 @@ Shroud user entry function."
     (_  (let ((res (apply (-partial #'shroud-el--run db-file) args)))
           (cond
            ((shroud-el--entry? (car res)) (mapconcat 'identity (-map (-cut shroud-el--entry-get 'id <>) res) "\n"))
-           ((shroud-el--entry? res) (s-join "\n"
-                                            (-map #'(lambda (p) (concat (car p) " " (cdr p)))
-                                                  (shroud-el--entry-get 'contents res))))
+           ((shroud-el--entry? res) (shroud-el--entry->output-string res))
            (res (s-join "\n" (-map #'cdr res))))))))
 
 (provide 'shroud-el)
