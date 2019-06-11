@@ -6,7 +6,7 @@
 ;;; Homepage: http://git.nly.info.tm:9001/shroud.git
 ;;; Package-Version: 1.15
 ;;; Keywords: tools, password management
-;;; Package-Requires: ((epg "1.0.0") (emacs "25") (s "1.6.0") (dash "2.15.0") (dash-functional "2.15.0"))
+;;; Package-Requires: ((epg "1.0.0") (emacs "25") (s "1.6.0") (dash "2.12.0") (dash-functional "2.15.0"))
 
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
@@ -70,6 +70,7 @@
     (buffer-string)))
 
 (defun shroud-el--read-config (key filename)
+  "Read an item KEY from shroud configuration in FILENAME."
   (let ((cfg (read (shroud-el--file-contents filename))))
     (pcase-let*
         ((`(quote ,contents) cfg)
@@ -80,7 +81,7 @@
         ('all cfg)
         (_ "nothing")))))
 
-(defcustom shroud-el--database-file nil
+(defcustom shroud-el--database-file (shroud-el--~ ".config/shroud/db.gpg")
   "Shroud Datastore file.
 GPG Encrypted."
   :group 'shroud
@@ -153,7 +154,7 @@ Optional ENCODING for the file."
   (-partial #'s-matches? q))
 
 (defun shroud-el--entry-get (key shroud-entry)
-  "Get KEY from SHROUD-EL--ENTRY."
+  "Get KEY from SHROUD-ENTRY."
   (cl-labels ((assoc-get (a b) (alist-get a b nil nil #'equal)))
     (pcase-let*
         ((`((id . ,id) (contents . ,contents)) shroud-entry)
@@ -228,6 +229,7 @@ Shroud entry function."
                 (shroud-el--entry-get 'contents e))))
 
 (defun shroud-el--entry->input-string (e)
+  "Parse entry E into a Shroud CLI compatible string."
   (s-join " "
           (cons (shroud-el--entry-get 'name e)
                 (-map #'(lambda (pair)
@@ -235,7 +237,9 @@ Shroud entry function."
                       (shroud-el--entry-get 'contents e)))))
 
 (defun shroud-el--input-string->shroud-entry (entry-input-string &optional split? seperator)
-  "ENTRY-INPUT-STRING SPLIT? SEPERATOR."
+    "Parse ENTRY-INPUT-STRING into a Shroud entry.
+If optional SPLIT? is provided then split the strings before
+conversion and use SEPERATOR, if present, to split."
   (let ((s (if split? (s-split (or seperator " ") entry-input-string) entry-input-string)))
     (cl-labels ((split-cons (str) (let ((s (s-split "=" str)))
                                       (cons (car s) (cadr s)))))
