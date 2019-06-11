@@ -1,4 +1,4 @@
-;;; shroud-test.el --- Buffers User Interface for shroud
+;;; shroud-test.el --- Buffers User Interface for shroud -*- lexical-binding: t -*-
 
 ;;; Copyright (C) 2019  Amar Singh
 
@@ -148,7 +148,7 @@
                    "shroud-el 1.12\nCopyright (C) 2019 Amar Singh\nGPLv3 or later"))))
 ;;; maybe need a fuzzer to check bogus arguments fed to the above
 
-;;; Test `shroud-el-run' help strings
+;;; Test `shroud-el-run'
 ;;; The tests will depend on knowing the result, that is knowing the
 ;;; items in temp db and config
 (ert-deftest shroud-test-el-ui ()
@@ -173,10 +173,10 @@
                    "n00b"))
     (should (equal (shroud-el-run shroud-test-db "show" shroud-test--e1 "username" "password")
                    "iCanHazCheez\nn00b"))
-    ;; (should (equal (shroud-el-run shroud-test-db "hide" ) ;; todo hide is not working
-    ;;                ))
-    ;; (should (equal (shroud-el-run shroud-test-db "hide" "--edit" test)
-    ;;                shroud-test--db))
+    (should (equal (and (null (shroud-el-run shroud-test-db "hide" "pops" "password=7dirtywords" "username=carlin")) (shroud-el-run shroud-test-db "show" "pops")) "password 7dirtywords\nusername carlin"))
+    (should (equal (and (null (shroud-el-run shroud-test-db "hide" "--edit" "pops" "password=choo-choo!" "username=thomas")) (shroud-el-run shroud-test-db "show" "pops")) "password choo-choo!\nusername thomas"))
+    (should (equal (and (null (shroud-el-run shroud-test-db "remove" "pops")) (null (shroud-el-run "show" "pops")))
+                   t))
     (should (equal (and (null (shroud-el-run shroud-test-db "remove" shroud-test--e4)) (null (shroud-el-run "show" shroud-test--e4)))
                    t))
     (should (equal (shroud-el-run shroud-test-db "list")
@@ -195,8 +195,9 @@
     (should (equal (shroud--help--show) "Usage: shroud show [OPTION] ID [KEY ...]\nShow secret named ID."))
     (should (equal (shroud--version) "shroud-el 1.12\nCopyright (C) 2019 Amar Singh\nGPLv3 or later"))
     (should (equal (shroud--list) (list shroud-test--e1 shroud-test--e2 shroud-test--e3)))
-;;    (should (equal (shroud--hide) val))
-;;    (should (equal (shroud--hide-edit) val))
+    (should (equal (and (null (shroud--hide "burr" "password=bill")) (shroud--show "burr")) "password bill"))
+    (should (equal (and (null (shroud--hide-edit "burr" "password=billy")) (shroud--show "burr")) "password billy"))
+    (should (equal (and (null (shroud--remove "burr")) (null (shroud--show "burr"))) t))
     (should (equal (shroud--show shroud-test--e1) "password iCanHazCheez\nusername n00b"))
     (should (equal (shroud--show-entry shroud-test--e3) '(("url" "news.com") ("username" "john-tho"))))
     (should (equal (shroud--show-sub-entries shroud-test--e2 "password") "edef4bd1dbf12c26d00ac8e50aac797f662e49bc"))
