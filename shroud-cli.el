@@ -196,6 +196,23 @@ Otherwise, you can pass the ARGS as STRING."
 Returns a list of matches."
   (-filter (shroud--query entry) (shroud--list)))
 
+(defun shroud-cli--entry-name->input-string (e)
+  "Parse entry E into a Shroud CLI compatible string."
+  (s-join " "
+          (cons e
+                (-map #'(lambda (pair)
+                          (concat (car pair) "=" (cdr pair)))
+                      (shroud--show-entry e)))))
+
+(defun shroud-cli--entry-name->entry-sexp (e &optional split? seperator)
+    "Parse E into a Shroud entry.
+If optional SPLIT? is provided then split the strings before
+conversion and use SEPERATOR, if present, to split."
+    (let ((s (s-split " " (shroud-cli--entry-name->input-string e))))
+      (cl-labels ((split-cons (str) (let ((s (s-split "=" str)))
+                                      (cons (car s) (cadr s)))))
+        `((id . ,(car s))
+          (contents ,@(-map #'split-cons (cdr s)))))))
 
 (provide 'shroud-cli)
 
