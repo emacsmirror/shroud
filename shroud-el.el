@@ -6,7 +6,7 @@
 ;;; Homepage: http://git.nly.info.tm:9001/shroud.git
 ;;; Package-Version: 1.15
 ;;; Keywords: tools, password management
-;;; Package-Requires: ((epg "1.0.0") (emacs "25") (s "1.6.0") (dash "2.12.0") (dash-functional "2.15.0"))
+;;; Package-Requires: ((epg "1.0.0") (emacs "25") (s "1.6.0") (dash "2.12.0") (dash-functional "2.12.0"))
 
 ;;; This program is free software; you can redistribute it and/or modify
 ;;; it under the terms of the GNU General Public License as published by
