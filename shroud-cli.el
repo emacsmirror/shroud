@@ -155,9 +155,10 @@ Otherwise, you can pass the ARGS as STRING."
 ;;; Bug when entries may contain empty entries or newlines in entries
 (defun shroud--show-entry (entry)
   "Return the results of ‘shroud--show’ ENTRY in Lisp lists."
-  (mapcar #'(lambda (x) (split-string x " "))
-          (mapcar #'s-collapse-whitespace
-                  (split-string (shroud--show entry) "\n"))))
+  (mapcar #'(lambda (ls) (cons (car ls) (cadr ls)))
+          (mapcar #'(lambda (x) (split-string x " "))
+                  (mapcar #'s-collapse-whitespace
+                          (split-string (shroud--show entry) "\n")))))
 
 (defun shroud--show-sub-entries (entry &rest sub-entry)
   "Return the output of shroud show ENTRY.
