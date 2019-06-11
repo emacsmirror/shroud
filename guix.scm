@@ -39,7 +39,7 @@
 (define-public emacs-shroud
   (package
    (name "emacs-shroud")
-   (version "ac8b04dd50a9caa5de954b17d745ad712cc08669")
+   (version "a66fbeb3c942703fa57f4878050933f5518787cc")
    (source
     (origin
      (method git-fetch)
@@ -51,7 +51,7 @@
       (git-file-name name version))
      (sha256
       (base32
-       "1b8xrzyb7l3lhy1kd2gwyngg60flfha3s2rlv98y8jc44zhz2bi8"))))
+       "0p0cn0cpwmfsaw3whwkfsxlvwwmcmbr4r7kqwwsdwrflbaclz9vw"))))
    (build-system emacs-build-system)
    (propagated-inputs
     `(("shroud" ,shroud)
