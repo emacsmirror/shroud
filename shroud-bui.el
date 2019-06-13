@@ -81,7 +81,7 @@ Pass in ARGS to `shroud--list'."
   (define-key map (kbd "e")   #'shroud-bui-edit-entry)
   (define-key map (kbd "a")   #'shroud-bui-list-add-entry)
   (define-key map (kbd "w")   #'shroud-bui-copy-entry-url)
-  (define-key map (kbd "I")   '#shroud-bui-copy-entry-username))
+  (define-key map (kbd "I")   #'shroud-bui-copy-entry-username))
 
 (defun shroud-bui-list--cmd (cmd msg)
   "Execute CMD with `bui-list-current-id' as argument and show MSG."
