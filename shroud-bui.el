@@ -76,12 +76,12 @@ Pass in ARGS to `shroud--list'."
   :sort-key '(name))
 
 (let ((map shroud-list-mode-map))
-  (define-key map (kbd "c") 'shroud-bui-list-copy-current-entry-pass)
-  (define-key map (kbd "d")   'shroud-bui-list-remove-current-entry)
-  (define-key map (kbd "e")   'shroud-bui-list-edit-current-entry)
-  (define-key map (kbd "a")   'shroud-bui-list-add-entry)
-  (define-key map (kbd "w")   'shroud-bui-list-copy-current-entry-url)
-  (define-key map (kbd "I")   'shroud-bui-list-copy-current-entry-username))
+  (define-key map (kbd "c") #'shroud-bui-copy-entry-pass)
+  (define-key map (kbd "d")   #'shroud-bui-remove-entry)
+  (define-key map (kbd "e")   #'shroud-bui-edit-entry)
+  (define-key map (kbd "a")   #'shroud-bui-list-add-entry)
+  (define-key map (kbd "w")   #'shroud-bui-copy-entry-url)
+  (define-key map (kbd "I")   '#shroud-bui-copy-entry-username))
 
 (defun shroud-bui-list--cmd (cmd msg)
   "Execute CMD with `bui-list-current-id' as argument and show MSG."
@@ -187,7 +187,7 @@ If optional ENTRY is specified then edit that instead."
             (insert (format "%S" (or entry-sexp shroud-bui--alist)))))
          (message (format "Shroud: editing %s , when finished Press C-c C-s" entry)))))
 
-(defun shroud-bui-list-edit-current-entry ()
+(defun shroud-bui-edit-entry ()
   "Edit the current entry in Shroud list BUI."
   (interactive)
   (let ((entry (bui-list-current-id)))
@@ -213,7 +213,7 @@ If Optional ENTRY is provided use that."
             (insert (format "%S" shroud-bui--alist))))
          (message (format "Shroud: Adding new entry, when finished Press C-c C-s")))))
 
-(defun shroud-bui-list-add-entry ()
+(defun shroud-bui-add-entry ()
   "Add new entry."
   (interactive)
   (and (shroud-bui-list-add-entry--internal)
