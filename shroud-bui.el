@@ -91,18 +91,22 @@ Pass in ARGS to `shroud--list'."
 
 (defun shroud-bui-copy-entry-pass ()
   "Copy current entry password."
+  (interactive)
   (shroud-bui-list--cmd #'shroud--show-password "Copied password."))
 
 (defun shroud-bui-copy-entry-url ()
     "Copy current entry url."
+  (interactive)
   (shroud-bui-list--cmd #'shroud--show-url "Copied uri."))
 
 (defun shroud-bui-copy-entry-username ()
   "Copy current entry username."
+  (interactive)
   (shroud-bui-list--cmd #'shroud--show-username "Copied username."))
 
 (defun shroud-bui-remove-entry ()
   "Remove current entry."
+  (interactive)
   (shroud-bui-list--cmd #'shroud--remove "Deleted entry."))
 
 (defvar shroud-bui-edit-entry-minor-mode-map
