@@ -196,6 +196,17 @@ Otherwise, you can pass the ARGS as STRING."
 Returns a list of matches."
   (-filter (shroud--query entry) (shroud--list)))
 
+(defalias 'shroud-cli--input-string->entry
+  'shroud-el--input-string->shroud-entry)
+
+(defalias 'shroud-cli--entry->input-string
+  'shroud-el--entry->input-string)
+
+(defalias 'shroud-cli--entry->output-string
+  'shroud-el--entry->output-string)
+
+(defalias 'shroud-cli--entry-get 'shroud-el--entry-get)
+
 (defun shroud-cli--entry-name->input-string (e)
   "Parse entry E into a Shroud CLI compatible string."
   (s-join " "
