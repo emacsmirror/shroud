@@ -131,10 +131,10 @@ a valid entry.")
 (defcustom shroud-bui--alist
   '((id . "id")
     (contents .
-              ((username . "")
-               (password . "")
-               (url . "")
-               (notes . ""))))
+              (("username" . "")
+               ("password" . "")
+               ("url" . "")
+               ("notes" . ""))))
   "Shroud sample entry sexp."
   :type 'sexp)
 
