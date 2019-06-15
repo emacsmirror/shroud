@@ -85,7 +85,6 @@ Pass in ARGS to `shroud--list'."
 
 (defun shroud-bui-list--cmd (cmd msg)
   "Execute CMD with `bui-list-current-id' as argument and show MSG."
-  (interactive)
   (and (kill-new (funcall cmd (bui-list-current-id)))
        (message "%s" msg)))
 
