@@ -107,7 +107,8 @@ Pass in ARGS to `shroud--list'."
 (defun shroud-bui-remove-entry ()
   "Remove current entry."
   (interactive)
-  (shroud-bui-list--cmd #'shroud--remove "Deleted entry."))
+  (and (shroud--remove (bui-list-current-id))
+       (message "Entry deleted.")))
 
 (defvar shroud-bui-edit-entry-minor-mode-map
   (let ((map (make-sparse-keymap)))
