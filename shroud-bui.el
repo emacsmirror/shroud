@@ -77,11 +77,11 @@ Pass in ARGS to `shroud--list'."
 
 (let ((map shroud-list-mode-map))
   (define-key map (kbd "c") #'shroud-bui-copy-entry-pass)
-  (define-key map (kbd "d")   #'shroud-bui-remove-entry)
-  (define-key map (kbd "e")   #'shroud-bui-edit-entry)
-  (define-key map (kbd "a")   #'shroud-bui-add-entry)
-  (define-key map (kbd "w")   #'shroud-bui-copy-entry-url)
-  (define-key map (kbd "I")   #'shroud-bui-copy-entry-username))
+  (define-key map (kbd "d") #'shroud-bui-remove-entry)
+  (define-key map (kbd "e") #'shroud-bui-edit-entry)
+  (define-key map (kbd "a") #'shroud-bui-add-entry)
+  (define-key map (kbd "w") #'shroud-bui-copy-entry-url)
+  (define-key map (kbd "I") #'shroud-bui-copy-entry-username))
 
 (defun shroud-bui-list--cmd (cmd msg)
   "Execute CMD with `bui-list-current-id' as argument and show MSG."
@@ -95,7 +95,7 @@ Pass in ARGS to `shroud--list'."
   (shroud-bui-list--cmd #'shroud--show-password "Copied password."))
 
 (defun shroud-bui-copy-entry-url ()
-    "Copy current entry url."
+  "Copy current entry url."
   (interactive)
   (shroud-bui-list--cmd #'shroud--show-url "Copied uri."))
 
@@ -152,14 +152,14 @@ a valid entry.")
   (interactive)
   (shroud-bui--hide-alist
    (or exp (with-current-buffer (current-buffer)
-                                (read (buffer-string))))))
+             (read (buffer-string))))))
 
 (defun shroud-bui--make-entry-buffer (entry)
   "Make a `buffer-name' to edit ENTRY."
   (concat "*shroud-bui-edit*-" entry))
 
 (defun shroud-bui--make-buffer-entry (buffer)
-    "Given Shroud-edit- BUFFER, return the corresponding entry-name."
+  "Given Shroud-edit- BUFFER, return the corresponding entry-name."
   (car (s-split "<" (substring buffer (length "*shroud-bui-edit*-")))))
 
 (defun shroud-bui-list-edit-current-entry--internal (&optional entry)
@@ -171,17 +171,17 @@ If optional ENTRY is specified then edit that instead."
          (entry-sexp (shroud-cli--entry-name->entry-sexp entry)))
     (and
      (progn
-          ;; open the entry in a new buffer
-          ;; allow the user to make changes
-          ;; when user saves C-x C-s then
-          ;; 1. save the entry 2. discard the buffer
-          (generate-new-buffer buffer)
-          (switch-to-buffer-other-window buffer)
-          (with-current-buffer buffer
-            (emacs-lisp-mode)
-            (shroud-bui-edit-entry-minor-mode)
-            (insert (format "%S" (or entry-sexp shroud-bui--alist)))))
-         (message (format "Shroud: editing %s , when finished Press C-c C-s" entry)))))
+       ;; open the entry in a new buffer
+       ;; allow the user to make changes
+       ;; when user saves C-x C-s then
+       ;; 1. save the entry 2. discard the buffer
+       (generate-new-buffer buffer)
+       (switch-to-buffer-other-window buffer)
+       (with-current-buffer buffer
+         (emacs-lisp-mode)
+         (shroud-bui-edit-entry-minor-mode)
+         (insert (format "%S" (or entry-sexp shroud-bui--alist)))))
+     (message (format "Shroud: editing %s , when finished Press C-c C-s" entry)))))
 
 (defun shroud-bui-edit-entry ()
   "Edit the current entry in Shroud list BUI."
@@ -197,17 +197,17 @@ If Optional ENTRY is provided use that."
   (let* ((buffer (generate-new-buffer-name (shroud-bui--make-entry-buffer "new"))))
     (and
      (progn
-          ;; open the entry in a new buffer
-          ;; allow the user to make changes
-          ;; when user saves C-x C-s then
-          ;; 1. save the entry 2. discard the buffer
-          (generate-new-buffer buffer)
-          (switch-to-buffer-other-window buffer)
-          (with-current-buffer buffer
-            (emacs-lisp-mode)
-            (shroud-bui-edit-entry-minor-mode)
-            (insert (format "%S" shroud-bui--alist))))
-         (message (format "Shroud: Adding new entry, when finished Press C-c C-s")))))
+       ;; open the entry in a new buffer
+       ;; allow the user to make changes
+       ;; when user saves C-x C-s then
+       ;; 1. save the entry 2. discard the buffer
+       (generate-new-buffer buffer)
+       (switch-to-buffer-other-window buffer)
+       (with-current-buffer buffer
+         (emacs-lisp-mode)
+         (shroud-bui-edit-entry-minor-mode)
+         (insert (format "%S" shroud-bui--alist))))
+     (message (format "Shroud: Adding new entry, when finished Press C-c C-s")))))
 
 (defun shroud-bui-add-entry ()
   "Add new entry."
