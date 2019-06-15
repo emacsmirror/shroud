@@ -228,13 +228,15 @@ Shroud entry function."
                     (concat (car pair) " " (cdr pair)))
                 (shroud-el--entry-get 'contents e))))
 
-(defun shroud-el--entry->input-string (e)
-  "Parse entry E into a Shroud CLI compatible string."
-  (s-join " "
-          (cons (shroud-el--entry-get 'name e)
+(defun shroud-el--entry->input-string (e &optional split?)
+  "Parse entry E into a Shroud CLI compatible string.
+If OPTIONAL SPLIT? is provided then split the outputs."
+  (let ((res (cons (shroud-el--entry-get 'name e)
                 (-map #'(lambda (pair)
                           (concat (car pair) "=" (cdr pair)))
                       (shroud-el--entry-get 'contents e)))))
+    (if split? res
+      (s-join " " res))))
 
 (defun shroud-el--input-string->shroud-entry (entry-input-string &optional split? seperator)
     "Parse ENTRY-INPUT-STRING into a Shroud entry.
