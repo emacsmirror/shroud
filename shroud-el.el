@@ -263,7 +263,7 @@ Shroud user entry function."
     (`("show" "--clipboard" ,e . ,fields) (kill-new (s-join "\n" (-map #'cdr (apply (-partial #'shroud-el--run db-file) "show" e fields)))))
     (_  (let ((res (apply (-partial #'shroud-el--run db-file) args)))
           (cond
-           ((shroud-el--entry? (car res)) (mapconcat 'identity (-map (-cut shroud-el--entry-get 'id <>) res) "\n"))
+           ((shroud-el--entry? (car res)) (s-join "\n" (-map (-cut shroud-el--entry-get 'id <>) res)))
            ((shroud-el--entry? res) (shroud-el--entry->output-string res))
            (res (s-join "\n" (-map #'cdr res))))))))
 
