@@ -138,23 +138,14 @@ a valid entry.")
   "Shroud sample entry sexp."
   :type 'sexp)
 
-(defun shroud-bui--k+v->string (pair)
-  "Given a PAIR, return string \"FIRST=REST\"."
-  (if (not (-cons-pair? (cdr pair)))
-      (format "%s=%s" (car pair) (cdr pair))
-    (format "%s=%s" (car pair) (cdr pair))))
-
-(defun shroud-bui-alist-serialize (exp)
-  "Given an entry EXP, return string \"FIRST=REST\"."
-  (s-join " " (cons (alist-get 'id exp) (-map #'shroud-bui--k+v->string (alist-get 'contents exp)))))
+(defalias 'shroud-bui-alist-serialize 'shroud-cli--entry->input-string)
 
 (defun shroud-bui--hide-alist (exp)
   "Shroud save an entry EXP."
-  (if (shroud--find (alist-get 'id exp))
-      (apply #'shroud--hide-edit
-             (s-split " " (shroud-bui-alist-serialize exp)))
-    (apply #'shroud--hide
-           (s-split " " (shroud-bui-alist-serialize exp)))))
+  (let ((res (shroud-bui-alist-serialize exp t)))
+    (if (shroud--find (alist-get 'id exp))
+        (apply #'shroud--hide-edit res)
+      (apply #'shroud--hide res))))
 
 (defun shroud-bui-save-entry (&optional exp)
   "Save an entry EXP to shroud db."
