@@ -79,7 +79,7 @@ Pass in ARGS to `shroud--list'."
   (define-key map (kbd "c") #'shroud-bui-copy-entry-pass)
   (define-key map (kbd "d")   #'shroud-bui-remove-entry)
   (define-key map (kbd "e")   #'shroud-bui-edit-entry)
-  (define-key map (kbd "a")   #'shroud-bui-list-add-entry)
+  (define-key map (kbd "a")   #'shroud-bui-add-entry)
   (define-key map (kbd "w")   #'shroud-bui-copy-entry-url)
   (define-key map (kbd "I")   #'shroud-bui-copy-entry-username))
 
