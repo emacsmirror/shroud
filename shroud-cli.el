@@ -3,7 +3,7 @@
 ;; Copyright (C) 2019  Amar Singh
 
 ;;; Author: Amar Singh <nly@disroot.org>
-;;; Homepage: http://git.nly.info.tm:9001/shroud.git
+;;; Homepage: https://github.com/o-nly/emacs-shroud
 ;;; Package-Version: 1.15
 ;;; Package-Requires: ((emacs "25") (s "1.6.0") (dash "2.12.0") (dash-functional "2.12.0"))
 ;;; Keywords: tools, password
