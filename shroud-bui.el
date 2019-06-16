@@ -149,9 +149,10 @@ a valid entry.")
 (defun shroud-bui-save-entry (&optional exp)
   "Save an entry EXP to shroud db."
   (interactive)
-  (shroud-bui--hide-alist
-   (or exp (with-current-buffer (current-buffer)
-             (read (buffer-string))))))
+  (and (shroud-bui--hide-alist
+        (or exp (with-current-buffer (current-buffer)
+                  (read (buffer-string)))))
+       (message "Entry updated.")))
 
 (defun shroud-bui--make-entry-buffer (entry)
   "Make a `buffer-name' to edit ENTRY."
