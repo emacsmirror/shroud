@@ -65,18 +65,6 @@
     (insert-file-contents filename)
     (buffer-string)))
 
-(defun shroud-el--read-config (key filename)
-  "Read an item KEY from shroud configuration in FILENAME."
-  (let ((cfg (read (shroud-el--file-contents filename))))
-    (pcase-let*
-        ((`(quote ,contents) cfg)
-         (user-id (alist-get 'user-id contents)))
-      (pcase key
-        ('user-id user-id)
-        ('contents contents)
-        ('all cfg)
-        (_ "nothing")))))
-
 (defcustom shroud-el--database-file (concat (getenv "HOME") "/.config/shroud/db.gpg")
   "Shroud Datastore file.
 GPG Encrypted."
@@ -92,6 +80,13 @@ GPG Encrypted."
   "Shroud Config file."
   :group 'shroud
   :type 'file)
+
+(defun shroud-el--apply-config (filename)
+  "Apply configurations from shroud configuration in FILENAME."
+  (let ((fn (lambda (pair) (eval `(setq ,(intern (format "shroud-el--%s" (car pair))) ,(cdr pair))))))
+    (-map fn (eval (read (shroud-el--file-contents filename))))))
+(if (and shroud-el--config-file (file-exists-p shroud-el--config-file))
+    (shroud-el--apply-config shroud-el--config-file))
 
 (defun shroud-el--write-file (reader filename)
   "Write the output of READER to FILENAME."
