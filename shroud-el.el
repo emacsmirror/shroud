@@ -97,43 +97,6 @@ GPG Encrypted."
     (insert (format "%S" (funcall reader)))
     (write-file filename)))
 
-(defmacro shroud-el--decrypting-reader (reader &optional encoding)
-  "Decrypt the result of calling READER.
-
-If no ENCODING is specified it's assumed to be utf-8."
-  `(let ((context (epg-make-context 'OpenPGP)))
-     (decode-coding-string
-      (epg-decrypt-string context (format "%s" (funcall ,reader)))
-      (or ,encoding 'utf-8))))
-
-(defmacro shroud-el--encrypting-reader (reader recipients &optional encoding)
-  "Encrypt the result of calling READER for RECIPIENTS.
-
-If no ENCODING is specified it's assumed to be utf-8.Write to file FILENAME."
-  `(let ((context (epg-make-context 'OpenPGP)))
-     (epg-encrypt-string context
-                         (encode-coding-string (format "%s" (funcall ,reader))
-                                               (or ,encoding 'utf-8))
-                         ,recipients)))
-
-;;; Deprecated
-(defun shroud-el--read-db (db-file)
-  "Decrypt and read the shroud db in DB-FILE.
-
-Deprecated: Use `shroud-el--read-database' instead."
-  (read (with-temp-buffer
-          (insert-file-contents-literally (or db-file))
-          (let ((context (epg-make-context 'OpenPGP)))
-            (decode-coding-string
-             (epg-decrypt-string context (buffer-substring-no-properties (point-min) (point-max)))
-             'utf-8)))))
-
-(defun shroud-el--read-database (db-file &optional encoding)
-  "Decrypt and read the shroud db in DB-FILE.
-Optional ENCODING for the file."
-  (read (shroud-el--decrypting-reader (shroud-el--file-contents db-file)
-                                   (or encoding 'utf-8))))
-
 (defun shroud-el--query (q)
    "Build a query Procedure for querying Q."
   (-partial #'s-matches? q))
