@@ -117,9 +117,9 @@ GPG Encrypted."
   (and (shroud-el--entry-get 'id entry)
        (shroud-el--entry-get 'contents entry) t))
 
-(defun shroud-el--entry-exists? (entry-name db)
-  "Check if the ENTRY-NAME is a valid shroud-el--entry not already present in DB."
-  (and (-find (shroud-el--query (shroud-el--entry-get 'id entry-name))
+(defun shroud-el--entry-exists? (entry db)
+  "Check if the ENTRY is a valid shroud-el--entry not already present in DB."
+  (and (-find (shroud-el--query (shroud-el--entry-get 'id entry))
               (-map (-cut shroud-el--entry-get 'id <>) db))
        t))
 
