@@ -103,17 +103,14 @@ GPG Encrypted."
 
 (defun shroud-el--entry-get (key shroud-entry)
   "Get KEY from SHROUD-ENTRY."
-  (cl-labels ((assoc-get (a b) (alist-get a b nil nil #'equal)))
-    (pcase-let*
-        ((`((id . ,id) (contents . ,contents)) shroud-entry)
-         (entry `((id . ,id) (name . ,id) ,@contents)))
-      (pcase key
-        (`all shroud-entry)
-        (`id id)
-        (`name id)
-        (`contents contents)
-        (`entry entry)
-        (_ (assoc key entry))))))
+  (pcase-let* ((`((id . ,id) (contents . ,contents)) shroud-entry))
+    (pcase key
+      (`all shroud-entry)
+      (`id id)
+      (`name id)
+      (`contents contents)
+      (`entry `((id . ,id) (name . ,id) ,@contents))
+      (_ (assoc key contents)))))
 
 (defun shroud-el--entry? (entry)
   "Check if the ENTRY is a valid shroud-el--entry."
