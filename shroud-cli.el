@@ -192,9 +192,7 @@ Otherwise, you can pass the ARGS as STRING."
   "Shroud remove ENTRY."
   (shroud--run "remove" entry))
 
-(defmacro shroud--query (q)
-  "Apply s-matches partially to Q."
-  `(lambda (s) (s-matches? ,q s)))
+(defalias 'shroud--query 'shroud-el--query)
 
 (defun shroud--find (entry)
   "Shroud find ENTRY.
