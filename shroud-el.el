@@ -81,12 +81,12 @@ GPG Encrypted."
   :group 'shroud
   :type 'file)
 
-(defun shroud-el--apply-config (filename)
+(defun shroud-el--apply-config! (filename)
   "Apply configurations from shroud configuration in FILENAME."
   (let ((fn (lambda (pair) (eval `(setq ,(intern (format "shroud-el--%s" (car pair))) ,(cdr pair))))))
     (-map fn (eval (read (shroud-el--file-contents filename))))))
 (if (and shroud-el--config-file (file-exists-p shroud-el--config-file))
-    (shroud-el--apply-config shroud-el--config-file))
+    (shroud-el--apply-config! shroud-el--config-file))
 
 (defun shroud-el--write-file (reader filename)
   "Write the output of READER to FILENAME."
