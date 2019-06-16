@@ -59,10 +59,6 @@
 (require 'dash)
 (require 'dash-functional)
 
-(defun shroud-el--~ (file)
-  "Find FILE in user HOME."
-    (concat (getenv "HOME") "/" file))
-
 (defun shroud-el--file-contents (filename)
   "Return the contents of FILENAME."
   (with-temp-buffer
@@ -81,7 +77,7 @@
         ('all cfg)
         (_ "nothing")))))
 
-(defcustom shroud-el--database-file (shroud-el--~ ".config/shroud/db.gpg")
+(defcustom shroud-el--database-file (concat (getenv "HOME") "/.config/shroud/db.gpg")
   "Shroud Datastore file.
 GPG Encrypted."
   :group 'shroud
@@ -92,7 +88,7 @@ GPG Encrypted."
   :group 'shroud
   :type 'file)
 
-(defcustom shroud-el--config-file (shroud-el--~ ".shroud")
+(defcustom shroud-el--config-file (concat (getenv "HOME") "/.shroud")
   "Shroud Config file."
   :group 'shroud
   :type 'file)
