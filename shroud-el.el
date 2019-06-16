@@ -91,8 +91,8 @@ GPG Encrypted."
 (defun shroud-el--write-file (reader filename)
   "Write the output of READER to FILENAME."
   (with-temp-buffer
-    (if (equal "gpg" (file-name-extension filename))
-        (if shroud-el--user-id
+    (when (equal "gpg" (file-name-extension filename))
+        (when shroud-el--user-id
             (insert (format ";; -*- epa-file-encrypt-to: (\"%s\") -*-\n" shroud-el--user-id))))
     (insert (format "%S" (funcall reader)))
     (write-file filename)))
