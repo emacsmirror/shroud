@@ -187,7 +187,8 @@ If OPTIONAL SPLIT? is provided then split the outputs."
     "Parse ENTRY-INPUT-STRING into a Shroud entry.
 If optional SPLIT? is provided then split the strings before
 conversion and use SEPERATOR, if present, to split."
-  (let ((s (if split? (s-split (or seperator " ") entry-input-string) entry-input-string)))
+    (let ((s (if (not split?) entry-input-string
+               (split-string-and-unquote entry-input-string (or seperator " ")))))
     (cl-labels ((split-cons (str) (let ((s (s-split "=" str)))
                                       (cons (car s) (cadr s)))))
       `((id . ,(car s))
