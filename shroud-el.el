@@ -114,8 +114,9 @@ GPG Encrypted."
 
 (defun shroud-el--entry? (entry)
   "Check if the ENTRY is a valid shroud-el--entry."
-  (pcase entry
-    (`((id . ,id) (contents . ,contents)) t)))
+  (and (equal entry
+              (shroud-el--entry-get 'eq entry))
+       t))
 
 (defun shroud-el--entry-exists? (entry-name db)
   "Check if the ENTRY-NAME is a valid shroud-el--entry not already present in DB."
