@@ -153,12 +153,15 @@ Otherwise, you can pass the ARGS as STRING."
   (apply #'shroud--run "show" entry args))
 
 ;;; Bug when entries may contain empty entries or newlines in entries
-(defun shroud--show-entry (entry)
-  "Return the results of ‘shroud--show’ ENTRY in Lisp lists."
-  (mapcar #'(lambda (ls) (cons (car ls) (cadr ls)))
-          (mapcar #'(lambda (x) (split-string x " "))
-                  (mapcar #'s-collapse-whitespace
-                          (split-string (shroud--show entry) "\n")))))
+(defun shroud--show-entry (entry &optional full?)
+  "Return the results of ‘shroud--show’ ENTRY in Lisp lists.
+If OPTIONAL FULL? is t then return a full entry."
+  (let ((res (mapcar #'(lambda (ls) (cons (car ls) (cadr ls)))
+                     (mapcar #'(lambda (x) (split-string x " "))
+                             (mapcar #'s-collapse-whitespace
+                                     (split-string (shroud--show entry) "\n"))))))
+    (if (not full?) res
+      `((id . ,entry) (contents . ,res)))))
 
 (defun shroud--show-sub-entries (entry &rest sub-entry)
   "Return the output of shroud show ENTRY.
@@ -209,21 +212,11 @@ Returns a list of matches."
 
 (defun shroud-cli--entry-name->input-string (e)
   "Parse entry E into a Shroud CLI compatible string."
-  (s-join " "
-          (cons e
-                (-map #'(lambda (pair)
-                          (concat (car pair) "=" (cdr pair)))
-                      (shroud--show-entry e)))))
+  (shroud-cli--entry->input-string (shroud--show-entry e t)))
 
-(defun shroud-cli--entry-name->entry-sexp (e &optional split? seperator)
-    "Parse E into a Shroud entry.
-If optional SPLIT? is provided then split the strings before
-conversion and use SEPERATOR, if present, to split."
-    (let ((s (s-split " " (shroud-cli--entry-name->input-string e))))
-      (cl-labels ((split-cons (str) (let ((s (s-split "=" str)))
-                                      (cons (car s) (cadr s)))))
-        `((id . ,(car s))
-          (contents ,@(-map #'split-cons (cdr s)))))))
+(defun shroud-cli--entry-name->entry-sexp (e)
+  "Return a shroud-entry given entry name E."
+  (shroud--show-entry e t))
 
 (provide 'shroud-cli)
 
