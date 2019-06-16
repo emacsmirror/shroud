@@ -47,6 +47,7 @@
    | d   | delete entry        |
    | g   | refresh buffer      |
    | e   | edit entry at point |
+   | w   | copy url            |
    |-----+---------------------|
 
 * Installation
