@@ -83,8 +83,8 @@ GPG Encrypted."
   :group 'shroud
   :type 'file)
 
-(defcustom shroud-el--gpg-key nil
-  "Shroud GPG Key."
+(defcustom shroud-el--user-id nil
+    "Shroud User ID."
   :group 'shroud
   :type 'file)
 
@@ -98,13 +98,11 @@ GPG Encrypted."
   (with-temp-buffer
     (if (s-suffix? ".gpg" filename)
         (cl-labels ((fmt (s) (format ";; -*- epa-file-encrypt-to: (\"%s\") -*-\n" s)))
-          (insert (cond
-                   (shroud-el--gpg-key
-                    (fmt shroud-el--gpg-key))
-                   ((file-exists-p shroud-el--config-file)
-                    (fmt (shroud-el--read-config 'user-id
-                                                 shroud-el--config-file)))
-                   (t "\n")))))
+          (insert
+           (cond
+            (shroud-el--user-id
+             (fmt shroud-el--user-id))
+            (t "\n")))))
     (insert (format "%S" (funcall reader)))
     (write-file filename)))
 
