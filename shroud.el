@@ -107,9 +107,17 @@
 (require 'shroud-bui)
 
 ;;;###autoload
-(defalias 'shroud 'shroud-bui)
+(defalias 'shroud-ui 'shroud-bui)
 ;; interactively using M-x shroud
 ;; or (global-set-key '("C-c p") 'shroud)
+
+;;;###autoload
+(defun shroud ()
+  "Completing read to copy entry password."
+  (interactive)
+  (and (kill-new (shroud--show-password
+                  (completing-read "Shroud: " (shroud--list))))
+       (message "Password copied to killring.")))
 
 (provide 'shroud)
 
