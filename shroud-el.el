@@ -101,8 +101,9 @@ GPG Encrypted."
    "Build a query Procedure for querying Q."
   (-partial #'s-matches? q))
 
-(defun shroud-el--entry-get (key shroud-entry)
-  "Get KEY from SHROUD-ENTRY."
+(defun shroud-el--entry-get (key shroud-entry &optional items)
+  "Get KEY from SHROUD-ENTRY.
+Optional argument ITEMS ."
   (pcase-let ((`((id . ,id) (contents . ,contents)) shroud-entry))
     (pcase key
       (`all shroud-entry)
@@ -110,6 +111,7 @@ GPG Encrypted."
       (`name id)
       (`contents contents)
       (`entry `((id . ,id) (name . ,id) ,@contents))
+      ('items (-map (-cut assoc <> contents) items))
       (_ (assoc key contents)))))
 
 (defun shroud-el--entry? (entry)
