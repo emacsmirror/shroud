@@ -202,16 +202,13 @@ If OPTIONAL SPLIT? is provided then split the outputs."
     (if split? res
       (s-join " " res))))
 
-(defun shroud-el--input-string->shroud-entry (entry-input-string &optional split? seperator)
-    "Parse ENTRY-INPUT-STRING into a Shroud entry.
-If optional SPLIT? is provided then split the strings before
-conversion and use SEPERATOR, if present, to split."
-    (let ((s (if (not split?) entry-input-string
-               (split-string-and-unquote entry-input-string (or seperator " ")))))
-    (cl-labels ((split-cons (str) (let ((s (s-split "=" str)))
-                                      (cons (car s) (cadr s)))))
+(defun shroud-el--input-string->shroud-entry (entry-input-strings)
+    "Parse ENTRY-INPUT-STRINGS into a Shroud entry."
+    (let ((s entry-input-strings)
+          (split-cons (lambda (str) (let ((x (s-split-up-to "=" str 1)))
+                                       (cons (car x) (cadr x))))))
       `((id . ,(car s))
-        (contents ,@(-map #'split-cons (cdr s)))))))
+        (contents ,@(-map split-cons (cdr s))))))
 
 (defun shroud-el-run (db-file &rest args)
   "Run shroud on DB-FILE with ARGS.
