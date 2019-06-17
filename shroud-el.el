@@ -123,12 +123,24 @@ GPG Encrypted."
               (-map (-cut shroud-el--entry-get 'id <>) db))
        t))
 
+(defun shroud-el--run-internal (db-file key &optional fn)
+  "Run shroud on DB-FILE with KEY FN.
+Shroud entry function."
+  (let ((db (lambda () (read (shroud-el--file-contents db-file)))))
+    (pcase key
+      (`db (funcall db))
+      (`fn (funcall fn (funcall db))))))
+
 (defun shroud-el--run (db-file &rest args)
   "Run shroud on DB-FILE with ARGS.
 Shroud entry function."
-  (cl-labels ((db () (read (shroud-el--file-contents db-file)))
+  (cl-labels ((db () (shroud-el--run-internal db-file 'db))
             (entry-name (e) (funcall (-cut shroud-el--entry-get 'id <>) e))
             (entry-contents (e) (funcall (-cut shroud-el--entry-get 'entry <>) e))
+            (fn-by-id (fn id db mod)
+                      (funcall fn (lambda (e)
+                                    (funcall mod (equal (or (car-safe id) id) (shroud-el--entry-get 'id e))))
+                                              db))
             (check  (a b) (equal a (car b)))
             (query-car (q) (-partial #'check q))
             (query-name (x y) (s-matches? x (entry-name y)))
@@ -141,29 +153,22 @@ Shroud entry function."
                                       (-map #'make-query a))
                                (db)))
       (`("show" ,a)
-       (-find #'(lambda (e) (equal (entry-name e) a)) (db)))
+       (fn-by-id #'-find a (db) #'identity))
       (`("show" ,a . ,rest)
-       (let ((entry (-find #'(lambda (e) (equal (entry-name e) a)) (db))))
+       (let ((entry (fn-by-id #'-find a (db) #'identity)))
          (-filter (apply #'-orfn (-map #'query-car rest)) (entry-contents entry))))
       (`("hide" ,a)
        (if (and (shroud-el--entry? a)
                 (not (shroud-el--entry-exists? a (db))))
            (shroud-el--write-file (lambda () (cons a (db))) db-file)))
       (`("hide" "--edit" ,a)
-       (if (and (shroud-el--entry? a)
-                (shroud-el--entry-exists? a (db)))
-           (shroud-el--write-file
-            (lambda ()
-              (cons a
-                    (-filter #'(lambda (c)
-                                 (not (equal (entry-name c) (entry-name a))))
-                             (db))))
-            db-file)))
+       (if (shroud-el--entry? a)
+           (shroud-el--write-file (lambda ()
+                                    (cons a (fn-by-id #'-filter (entry-name a) (db) #'not)))
+                                  db-file)))
       (`("remove" ,a)
        (shroud-el--write-file (lambda ()
-                                (-filter #'(lambda (c)
-                                             (not (equal (entry-name c) a)))
-                                         (db)))
+                                (fn-by-id #'-filter a (db) #'not))
                               db-file)))))
 
 (defun shroud-el--entry->output-string (e)
