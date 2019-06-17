@@ -173,6 +173,18 @@ Shroud entry function."
                     (concat (car pair) " " (cdr pair)))
                 (shroud-el--entry-get 'contents e))))
 
+(defun shroud-el--output-string->input-string (entry-name output-string &optional split?)
+  "ENTRY-NAME OUTPUT-STRING.
+If OPTIONAL SPLIT? is provided then split the outputs."
+  (let* ((make-pair (lambda (ls) (concat (car ls) "=" (cadr ls))))
+        (split (lambda (s) (split-string-and-unquote s)))
+        (res (cons entry-name
+                   (-map make-pair
+                         (-map split
+                               (s-split "\n" output-string))))))
+    (if split? res
+      (s-join " " res))))
+
 (defun shroud-el--entry->input-string (e &optional split?)
   "Parse entry E into a Shroud CLI compatible string.
 If OPTIONAL SPLIT? is provided then split the outputs."
