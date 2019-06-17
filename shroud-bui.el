@@ -137,11 +137,9 @@ a valid entry.")
   "Shroud sample entry sexp."
   :type 'sexp)
 
-(defalias 'shroud-bui-alist-serialize 'shroud-cli--entry->input-string)
-
 (defun shroud-bui--hide-alist (exp)
   "Shroud save an entry EXP."
-  (let ((res (shroud-bui-alist-serialize exp t)))
+  (let ((res (shroud-cli--entry->input-string exp t)))
     (if (shroud--find (alist-get 'id exp))
         (apply #'shroud--hide-edit res)
       (apply #'shroud--hide res))))
