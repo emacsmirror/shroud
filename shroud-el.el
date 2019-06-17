@@ -103,7 +103,7 @@ GPG Encrypted."
 
 (defun shroud-el--entry-get (key shroud-entry)
   "Get KEY from SHROUD-ENTRY."
-  (pcase-let* ((`((id . ,id) (contents . ,contents)) shroud-entry))
+  (pcase-let ((`((id . ,id) (contents . ,contents)) shroud-entry))
     (pcase key
       (`all shroud-entry)
       (`id id)
