@@ -211,10 +211,6 @@ Returns a list of matches."
 
 (defalias 'shroud-cli--entry-get 'shroud-el--entry-get)
 
-(defun shroud-cli--entry-name->input-string (e)
-  "Parse entry E into a Shroud CLI compatible string."
-  (shroud-cli--entry->input-string (shroud--show-entry e)))
-
 (provide 'shroud-cli)
 
 ;;; shroud-cli.el ends here
