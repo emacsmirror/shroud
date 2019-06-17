@@ -210,6 +210,9 @@ Returns a list of matches."
 (defalias 'shroud-cli--entry->output-string
   'shroud-el--entry->output-string)
 
+(defalias 'shroud-cli--output-string->input-string
+    'shroud-el--output-string->input-string)
+
 (defalias 'shroud-cli--entry-get 'shroud-el--entry-get)
 
 (defun shroud-cli--entry-name->input-string (e)
