@@ -188,7 +188,8 @@ If OPTIONAL SPLIT? is provided then split the outputs."
         (res (cons entry-name
                    (-map make-pair
                          (-map split
-                               (s-split "\n" output-string))))))
+                               (-map #'s-collapse-whitespace
+                                     (s-split "\n" output-string)))))))
     (if split? res
       (s-join " " res))))
 
