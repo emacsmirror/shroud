@@ -157,18 +157,15 @@ Otherwise, you can pass the ARGS as STRING."
   (apply #'shroud--run "show" entry args))
 
 ;;; Bug when entries may contain empty entries or newlines in entries
-(defun shroud--show-entry (entry &optional full?)
+(defun shroud--show-entry (entry)
   "Return the results of ‘shroud--show’ ENTRY in Lisp lists.
 If OPTIONAL FULL? is t then return a full entry."
   (let ((ent (shroud--show entry)))
     (if (not ent) nil
-      (let ((res (-map #'(lambda (ls) (cons (car ls) (cadr ls)))
-                       (-map (-cut s-split " " <>)
-                             (-map #'s-collapse-whitespace
-                                   (s-split "\n" ent))))))
+      (let ((res (shroud-cli--input-string->entry
+                  (shroud-cli--output-string->input-string entry ent) t)))
         (if (not res) nil
-          (if (not full?) res
-            `((id . ,entry) (contents . ,res))))))))
+          res)))))
 
 (defun shroud--show-sub-entries (entry &rest sub-entry)
   "Return the output of shroud show ENTRY.
@@ -217,11 +214,11 @@ Returns a list of matches."
 
 (defun shroud-cli--entry-name->input-string (e)
   "Parse entry E into a Shroud CLI compatible string."
-  (shroud-cli--entry->input-string (shroud--show-entry e t)))
+  (shroud-cli--entry->input-string (shroud--show-entry e)))
 
 (defun shroud-cli--entry-name->entry-sexp (e)
   "Return a shroud-entry given entry name E."
-  (shroud--show-entry e t))
+  (shroud--show-entry e))
 
 (provide 'shroud-cli)
 
