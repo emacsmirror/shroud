@@ -199,7 +199,7 @@
     (should (equal (and (null (shroud--hide-edit "burr" "password=billy")) (shroud--show "burr")) "password billy"))
     (should (equal (and (null (shroud--remove "burr")) (null (shroud--show "burr"))) t))
     (should (equal (shroud--show shroud-test--e1) "password iCanHazCheez\nusername n00b"))
-    (should (equal (shroud--show-entry shroud-test--e3) '(("url" "news.com") ("username" "john-tho"))))
+    (should (equal (shroud--show-entry shroud-test--e3) '((id . "bbc") (contents ("url" . "news.com") ("username" . "john-tho")))))
     (should (equal (shroud--show-sub-entries shroud-test--e2 "password") "edef4bd1dbf12c26d00ac8e50aac797f662e49bc"))
 ;;    (should (equal (shroud--show-clipboard) ))
     (should (equal (shroud--show-username shroud-test--e1) "n00b"))
