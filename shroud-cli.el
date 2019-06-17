@@ -215,10 +215,6 @@ Returns a list of matches."
   "Parse entry E into a Shroud CLI compatible string."
   (shroud-cli--entry->input-string (shroud--show-entry e)))
 
-(defun shroud-cli--entry-name->entry-sexp (e)
-  "Return a shroud-entry given entry name E."
-  (shroud--show-entry e))
-
 (provide 'shroud-cli)
 
 ;;; shroud-cli.el ends here

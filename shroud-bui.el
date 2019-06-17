@@ -168,7 +168,7 @@ If optional ENTRY is specified then edit that instead."
   (interactive)
   (let* ((entry (or entry (bui-list-current-id)))
          (buffer (generate-new-buffer-name (shroud-bui--make-entry-buffer entry)))
-         (entry-sexp (shroud-cli--entry-name->entry-sexp entry)))
+         (entry-sexp (shroud--show-entry entry)))
     (and
      (progn
        ;; open the entry in a new buffer
