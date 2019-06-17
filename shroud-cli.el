@@ -126,10 +126,14 @@ SUB-ENTRY is passed straight to shroud."
   (shroud--run "--version"))
 
 ;;; List Entries
+(defun shroud-cli--fmt (s)
+  "Format output string S."
+  (split-string-and-unquote s "\n"))
+
 (defun shroud--list ()
   "Return the output of shroud list.
 ARGS are passed straight to shroud."
-  (split-string  (shroud--run "list") "\n"))
+  (shroud-cli--fmt (shroud--run "list")))
 
 ;;; Hide secrets
 (defun shroud--hide (&rest args)
