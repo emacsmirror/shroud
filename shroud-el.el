@@ -184,7 +184,7 @@ Shroud entry function."
   "ENTRY-NAME OUTPUT-STRING.
 If OPTIONAL SPLIT? is provided then split the outputs."
   (let* ((make-pair (lambda (ls) (concat (car ls) "=" (cadr ls))))
-        (split (lambda (s) (split-string-and-unquote s)))
+        (split (lambda (s) (s-split-up-to " " s 1)))
         (res (cons entry-name
                    (-map make-pair
                          (-map split

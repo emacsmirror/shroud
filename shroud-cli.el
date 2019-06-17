@@ -156,12 +156,10 @@ Otherwise, you can pass the ARGS as STRING."
 (defun shroud--show-entry (entry)
   "Return the results of ‘shroud--show’ ENTRY in Lisp lists.
 If OPTIONAL FULL? is t then return a full entry."
-  (let ((ent (shroud--show entry)))
-    (if (not ent) nil
-      (let ((res (shroud-cli--input-string->entry
-                  (shroud-cli--output-string->input-string entry ent) t)))
-        (if (not res) nil
-          res)))))
+  (let ((e (shroud--show entry)))
+    (if (not e) nil
+      (shroud-cli--input-string->entry
+       (shroud-cli--output-string->input-string entry e t)))))
 
 (defun shroud--show-sub-entries (entry &rest sub-entry)
   "Return the output of shroud show ENTRY.
