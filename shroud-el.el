@@ -216,21 +216,22 @@ conversion and use SEPERATOR, if present, to split."
 (defun shroud-el-run (db-file &rest args)
   "Run shroud on DB-FILE with ARGS.
 Shroud user entry function."
-  (pcase args
-    (`(,(or "--help" "-h") . ,_) "Usage: shroud COMMAND ARGS. COMMAND may be one of:\nlist | show | remove | hide")
-    (`("--version" . ,_) "shroud-el 1.12\nCopyright (C) 2019 Amar Singh\nGPLv3 or later")
-    (`("list" ,(or "--help" "-h") . ,_) "Usage: shroud list [OPTION]\nShow the names of all secrets in the database.")
-    (`("show" ,(or "--help" "-h") . ,_) "Usage: shroud show [OPTION] ID [KEY ...]\nShow secret named ID.")
-    (`("hide" ,(or "--help" "-h") . ,_) "Usage: shroud hide [OPTION] ID KEY=VALUE ...\nAdd a new secret named ID to the database.")
-    (`("remove" ,(or "--help" "-h") . ,_) "Usage: shroud remove [OPTION] id\nRemove a secret from the database.")
-    (`("hide" "--edit" . ,e) (apply (-partial #'shroud-el--run db-file) "hide" "--edit" (shroud-el--input-string->shroud-entry e) '()))
-    (`("hide" .  ,e) (apply (-partial #'shroud-el--run db-file) "hide" (shroud-el--input-string->shroud-entry e) '()))
-    (`("show" "--clipboard" ,e . ,fields) (kill-new (s-join "\n" (-map #'cdr (apply (-partial #'shroud-el--run db-file) "show" e fields)))))
-    (_  (let ((res (apply (-partial #'shroud-el--run db-file) args)))
-          (cond
-           ((shroud-el--entry? (car res)) (s-join "\n" (-map (-cut shroud-el--entry-get 'id <>) res)))
-           ((shroud-el--entry? res) (shroud-el--entry->output-string res))
-           (res (s-join "\n" (-map #'cdr res))))))))
+  (let ((run (-partial #'shroud-el--run db-file)))
+    (pcase args
+      (`(,(or "--help" "-h") . ,_) "Usage: shroud COMMAND ARGS. COMMAND may be one of:\nlist | show | remove | hide")
+      (`("--version" . ,_) "shroud-el 1.12\nCopyright (C) 2019 Amar Singh\nGPLv3 or later")
+      (`("list" ,(or "--help" "-h") . ,_) "Usage: shroud list [OPTION]\nShow the names of all secrets in the database.")
+      (`("show" ,(or "--help" "-h") . ,_) "Usage: shroud show [OPTION] ID [KEY ...]\nShow secret named ID.")
+      (`("hide" ,(or "--help" "-h") . ,_) "Usage: shroud hide [OPTION] ID KEY=VALUE ...\nAdd a new secret named ID to the database.")
+      (`("remove" ,(or "--help" "-h") . ,_) "Usage: shroud remove [OPTION] id\nRemove a secret from the database.")
+      (`("hide" "--edit" . ,e) (apply run "hide" "--edit" (shroud-el--input-string->shroud-entry e) '()))
+      (`("hide" .  ,e) (apply run "hide" (shroud-el--input-string->shroud-entry e) '()))
+      (`("show" "--clipboard" ,e . ,fields) (kill-new (s-join "\n" (-map #'cdr (shroud-el--entry-get 'items (apply run  "show" e '()) fields)))))
+      (_  (let ((res (apply (-partial #'shroud-el--run db-file) args)))
+            (cond
+             ((shroud-el--entry? (car res)) (s-join "\n" (-map (-cut shroud-el--entry-get 'id <>) res)))
+             ((shroud-el--entry? res) (shroud-el--entry->output-string res))
+             (res (s-join "\n" (-map #'cdr res)))))))))
 
 (provide 'shroud-el)
 
