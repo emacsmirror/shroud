@@ -145,10 +145,6 @@ ARGS are passed straight to shroud."
   "Return the output of shroud edit.
 ARGS are passed straight to shroud."
   (apply #'shroud--hide "--edit" args))
-;;; shroud hide edit entry password
-;;; shroud hide edit entry username
-;;; shroud hide edit add entry new-entry value
-;;; shroud hide edit
 
 (defun shroud--show (entry &rest args)
   "Return the output of shroud show ENTRY.
