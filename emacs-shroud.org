@@ -1,8 +1,3 @@
-#+TITLE: Shroud.el
-#+TEXINFO_DIR_TITLE: Shroud.el
-#+TEXINFO_DIR_DESC: Shroud secrets
-#+SUBTITLE: Manage secrets, passwords etc.
-#+AUTHOR: Amar Singh
 * Emacs-Shroud Interface
   :PROPERTIES:
   :ALT_TITLE: Introduction
@@ -21,19 +16,19 @@
   You can view, copy and edit secrets from Emacs.
 
 ** Features
-  :PROPERTIES:
-  :ALT_TITLE: Features
-  :DESCRIPTION: Facilities provided by this package
-  :END:
+   :PROPERTIES:
+   :ALT_TITLE: Features
+   :DESCRIPTION: Facilities provided by this package
+   :END:
    - Elisp procedures to operate the Shroud command line interface.
    - An Elisp implementation of Shroud, using EPG and dash.
    - A Buffers User Interface to view entries in the database.
 
 ** For a quick start
-  :PROPERTIES:
-  :ALT_TITLE: Usage
-  :DESCRIPTION: Common usage commands
-  :END:
+   :PROPERTIES:
+   :ALT_TITLE: Usage
+   :DESCRIPTION: Common usage commands
+   :END:
    - M-x shroud
    - (global-set-key (kbd "C-c p") 'shroud)
    - Keybinds: To view the keybinding press =C-h m= in the *Shroud*
@@ -56,10 +51,10 @@
   :DESCRIPTION: This section will guide you through setting up Shroud.el
   :END:
 ** with guix
-  :PROPERTIES:
-  :ALT_TITLE: Install with Guix
-  :DESCRIPTION: Using the Gnu Guix package manager
-  :END:
+   :PROPERTIES:
+   :ALT_TITLE: Install with Guix
+   :DESCRIPTION: Using the Gnu Guix package manager
+   :END:
    To install, simply clone the repo, or download file =guix.scm= and
    build the package =emacs-shroud= present in =guix.scm=.
    #+begin_src shell
@@ -68,19 +63,19 @@
     guix package -i guix.scm
    #+end_src
 ** from git
-  :PROPERTIES:
-  :ALT_TITLE: From Sources
-  :DESCRIPTION: Install from Git
-  :END:
+   :PROPERTIES:
+   :ALT_TITLE: From Sources
+   :DESCRIPTION: Install from Git
+   :END:
    #+begin_src emacs-lisp
     (push (directory-file-name "/path/to/emacs-shroud/") load-path)
     (require 'shroud)
    #+end_src
 ** from Melpa
-  :PROPERTIES:
-  :ALT_TITLE: From Melpa Package Repository
-  :DESCRIPTION: Install from Melpa
-  :END:
+   :PROPERTIES:
+   :ALT_TITLE: From Melpa Package Repository
+   :DESCRIPTION: Install from Melpa
+   :END:
    The easiest way to install is to use MELPA, and just type:
    =M-x package-install RET shroud= inside Emacs.
 
@@ -115,20 +110,48 @@
   :DESCRIPTION: A minimal setup
   :END:
 ** Sample Shroud Config
-  :PROPERTIES:
-  :ALT_TITLE: Shroud Config
-  :DESCRIPTION: Config file
-  :END:
+   :PROPERTIES:
+   :ALT_TITLE: Shroud Config
+   :DESCRIPTION: Config file
+   :END:
    =$HOME/.shroud= or M-x customize-group shroud
    #+begin_src emacs-lisp
     '((user-id . "AAOEUOEUP12323"))
    #+end_src
 ** Sample Shroud Database
-  :PROPERTIES:
-  :ALT_TITLE: Shroud Database
-  :DESCRIPTION: Database file
-  :END:
+   :PROPERTIES:
+   :ALT_TITLE: Shroud Database
+   :DESCRIPTION: Database file
+   :END:
    #+begin_src emacs-lisp
     ;; -*- epa-file-encrypt-to: ("AAOEUOEUP12323") -*-
     (((id . "my-bank") (contents  ("password" . "hackme") ("username" . "pwned") ...)) ...)
    #+end_src
+* Legalese
+  :PROPERTIES:
+  :COPYING:  t
+  :END:
+
+** Texinfo meta
+   #+AUTHOR: Amar Singh
+   #+TITLE: Shroud.el
+   #+TEXINFO_DIR_TITLE: Shroud.el
+   #+TEXINFO_DIR_DESC: Shroud secrets
+   #+SUBTITLE: Manage secrets, passwords etc.
+   #+TEXINFO_PRINTED_TITLE: Shroud.el
+
+** Copyright
+   Copyright (C) 2019 Amar Singh
+
+   This program is free software: you can redistribute it and/or
+   modify it under the terms of the GNU General Public License as
+   published by the Free Software Foundation, either version 3 of the
+   License, or (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+   See the GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <https://www.gnu.org/licenses/>.
