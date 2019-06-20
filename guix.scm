@@ -54,19 +54,19 @@
 (define-public emacs-shroud
   (package
    (name "emacs-shroud")
-   (version "a66fbeb3c942703fa57f4878050933f5518787cc")
+   (version "1.83")
    (source
     (origin
      (method git-fetch)
      (uri
       (git-reference
-       (url "http://github.com/o-nly/emacs-shroud.git")
+       (url "https://github.com/o-nly/emacs-shroud.git")
        (commit version)))
      (file-name
       (git-file-name name version))
      (sha256
       (base32
-       "0p0cn0cpwmfsaw3whwkfsxlvwwmcmbr4r7kqwwsdwrflbaclz9vw"))))
+       "0hns8hlqr76grsninarkzh2mv8vblq2ffhi4iswp013aqhs6q42f"))))
    (build-system emacs-build-system)
    (propagated-inputs
     `(("shroud" ,shroud)
