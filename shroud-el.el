@@ -23,33 +23,18 @@
 
 ;;; Commentary:
 ;;; An alternative to shroud command line.
-;;; what shall i keep in this module? Since this is a shroud
-;;; implementation I would need to support all of shroud's command line
-;;; options, but I dont feel like writing crappy code based on
-;;; optargs, We can write convenient facilities in Lisp, I'll have a
-;;; wrapper around it (a serializer so that external modules can choose
-;;; to use it as if this were shroud itself.)
 
 ;;; parts required
-;;; 1. shroud--db-reader DONE
-;;; 2. shroud--db-writer DONE
-;;; 3. shroud--run- DONE
-;;; 3.a help DONE
-;;; 3.b list DONE
-;;; 3.c show DONE
-;;; 3.d hide DONE
-;;; 3.e remove DONE
-;;; 4. shroud--entry type/object DONE
-;;; 5. shroud--entry-name DONE
-
-;;; TODO
-;;; 0. `require' DONE
-;;; 1. detect missing `shroud-database-file' DONE
-;;; 2. detect missing `shroud-config-file' DONE
-;;; 3. `tests' (assert (equal (shroud--run-el args) (shroud--run-internal args))) DONE
-;;; 4. `shroud-gpg-key', (or alternative-method) ABORTED
-;;; 5. functional style DONE
-;;; 6. Deprecate features (add an alternative in "Docstring `alternative'") DONE
+;;; shroud interpreter: for the shroud machine. A feel:
+;;; (shroud-eval bar env-db) -> evaluates to entry "bar", in database env-db
+;;; (shroud-eval (define foo <entry>) env-db) -> unspecified, bind foo= <entry>
+;;; (shroud-eval (U foo bar) -> entry, (union)foo and bar's contents under foo, no repetition
+;;; (shroud-eval (^ foo bar) -> entry, (intersection) foo and bar's same content under foo, no repetition
+;;; (shroud-eval (- foo bar) -> entry, foo's contents that are not present in bar
+;;; (shroud-eval (+ foo bar) -> entry, foo's contents plus bar's
+;;; tests:
+;;; (shroud-eval (- (+ foo bar) bar))
+;;; desired: variadic (U foo bar ...), composable (+ (U foo bar) baz)
 
 ;;; Code:
 
@@ -83,7 +68,8 @@ GPG Encrypted."
 
 (defun shroud-el--apply-config! (filename)
   "Apply configurations from shroud configuration in FILENAME."
-  (let ((fn (lambda (pair) (eval `(setq ,(intern (format "shroud-el--%s" (car pair))) ,(cdr pair))))))
+  (let ((fn (lambda (pair)
+              (eval `(setq ,(intern (format "shroud-el--%s" (car pair))) ,(cdr pair))))))
     (-map fn (eval (read (shroud-el--file-contents filename))))))
 (if (and shroud-el--config-file (file-exists-p shroud-el--config-file))
     (shroud-el--apply-config! shroud-el--config-file))
