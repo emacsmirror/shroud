@@ -1,21 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<!-- -->
 <!-- Copyright (C) 2019  Amar Singh -->
-<!--  -->
-<!-- This program is free software: you can redistribute it and/or modify -->
-<!-- it under the terms of the GNU General Public License as published by -->
-<!-- the Free Software Foundation, either version 3 of the License, or -->
-<!-- (at your option) any later version. -->
-<!--  -->
-<!-- This program is distributed in the hope that it will be useful, -->
-<!-- but WITHOUT ANY WARRANTY; without even the implied warranty of -->
-<!-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the -->
-<!-- GNU General Public License for more details. -->
-<!--  -->
-<!-- You should have received a copy of the GNU General Public License -->
-<!-- along with this program.  If not, see <https://www.gnu.org/licenses/>. -->
-<!--  -->
 
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
@@ -34,6 +19,8 @@
    id="svg8"
    inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
    sodipodi:docname="shroud.svg">
+  <title
+     id="title1023">shroud.el</title>
   <defs
      id="defs2">
     <marker
@@ -317,8 +304,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="2"
-     inkscape:cx="342.71555"
-     inkscape:cy="238.01586"
+     inkscape:cx="191.38144"
+     inkscape:cy="158.01586"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -335,8 +322,30 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title>shroud.el</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Amar Singh</dc:title>
+          </cc:Agent>
+        </dc:creator>
       </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
     </rdf:RDF>
   </metadata>
   <g
