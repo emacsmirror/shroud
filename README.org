@@ -29,7 +29,7 @@
    :ALT_TITLE: Usage
    :DESCRIPTION: Common usage commands
    :END:
-   - M-x shroud
+   - M-x shroud (for minimal interface) M-x shroud-bui (for buffers interface)
    - (global-set-key (kbd "C-c p") 'shroud)
    - Keybinds: To view the keybinding press =C-h m= in the *Shroud*
      Buffer
