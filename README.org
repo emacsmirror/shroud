@@ -92,7 +92,7 @@
   #+begin_src emacs-lisp
     (setq shroud-el--database-file "~/.config/shroud/db.gpg")
     (setq shroud-el--config-file "~/.shroud")
-    (setq shroud-el--gpg-key "A1761FE275883XXX")
+    (setq shroud-el--gpg-key "user@example.com")
   #+end_src
   If gpg-key is not set and no configuration file is found Shroud may
   prompt you to choose a key each time you edit the database(remember
