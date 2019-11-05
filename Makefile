@@ -20,7 +20,7 @@ all: $(outs)
 clean:
 	-rm $(outs)
 
-emacs-shroud.texi: emacs-shroud.org
+emacs-shroud.texi: README.org
 	emacs -q --batch --eval "(progn (find-file \"$<\") \
 				(org-texinfo-export-to-texinfo))"
 
@@ -33,8 +33,8 @@ emacs-shroud: emacs-shroud.texi
 emacs-shroud.html: emacs-shroud.texi
 	makeinfo emacs-shroud.texi --html --no-split
 
-emacs-shroud.txt: emacs-shroud.org
+emacs-shroud.txt: README.org
 	makeinfo emacs-shroud.texi --plaintext > emacs-shroud.txt
 
-emacs-shroud.pdf: emacs-shroud.org
+emacs-shroud.pdf: README.org
 	makeinfo emacs-shroud.texi --pdf
