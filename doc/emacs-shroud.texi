@@ -50,9 +50,23 @@ Edition @value{MANUAL-VERSION} @*
 @node Top
 @top @value{PROG-NAME}
 
-@value{PROG-NAME} is a small, extensible password manager. This manual
-describes how to use @value{PROG-NAME} and some of the ways to customise
-it; it corresponds to the @value{PROG-NAME} version
+Shroud is a password manager written in Guile which uses GnuPG in the
+backend. See Shroud's website at
+@uref{https://dthompson.us/projects/shroud.html, this link.} This
+package is an Emacs interface to Shroud using the
+@uref{https://github.com/alezost/bui.el, Buffers User Interface}
+library.
+
+Shroud stores secrets as a plain text encrypted using
+GnuPG. Particularly, in Lisp's S-expressions, in a form of
+associaton lists. This provides the dual benefit that, the file is
+trivial to parse by machine, yet at the same time, is perfectly
+readable/editable by a human.
+
+You can view, copy and edit secrets from Emacs.
+
+This manual describes how to use @value{PROG-NAME} and some of the
+ways to customise it; it corresponds to the @value{PROG-NAME} version
 @value{PROG-VERSION}.
 
 @c See 'manual-html-mono' and 'manual-html-node' in admin/admin.el.
@@ -75,12 +89,10 @@ manager, @value{MANUAL-VERSION}.@refill
 @insertcopying
 
 @menu
-* Introduction::                 Shroud secrets manager
 * Distribution::        Get the source code
 * Installation::        Install @value{PROG-NAME} using Guix
 * Configuration::                Pick some options, set variables
-* Example Setup::                A minimal setup
-@c * Usage::               Using @value{PROG-NAME} from the command line, application keybinds
+* Usage::               Some of the ways to use @value{PROG-NAME} and configure
 @c * API::                 The programming interface
 @c * Extensions::          Modules and extensions for @value{PROG-NAME}
 @c * Development::         Making changes to the source code and contributing
@@ -88,63 +100,6 @@ manager, @value{MANUAL-VERSION}.@refill
 * Documentation License::      The license for this documentation
 
 @end menu
-
-@c *********************************************************************
-@node Introduction
-@chapter Introduction
-
-Shroud is a password manager written in Guile which uses GnuPG in
-the backend. See Shroud's website at @uref{https://dthompson.us/projects/shroud.html, this link.} This package is an
-Emacs interface to Shroud using the Buffers User Interface library.
-
-Shroud stores secrets as a plain text encrypted using
-GnuPG. Particularly, in Lisp's S-expressions, in a form of
-associaton lists. This provides the dual benefit that, the file is
-trivial to parse by machine, yet at the same time, is perfectly
-readable/editable by a human.
-
-You can view, copy and edit secrets from Emacs.
-
-@section Features
-
-@itemize
-@item
-Elisp procedures to operate the Shroud command line interface.
-@item
-An Elisp implementation of Shroud, using EPG and dash.
-@item
-A Buffers User Interface to view entries in the database.
-@end itemize
-
-@section Quick start
-
-@itemize
-@item
-M-x shroud (for minimal interface) M-x shroud-bui (for buffers interface)
-@item
-(global-set-key (kbd "C-c p") 'shroud)
-@item
-Keybinds: To view the keybinding press @samp{C-h m} in the @strong{Shroud}
-Buffer
-@end itemize
-@multitable {aaa} {aaaaaaaaaaaaaaaaaaa}
-@headitem Key
-@tab Action
-@item c
-@tab copy password
-@item I
-@tab copy username
-@item a
-@tab add new entry
-@item d
-@tab delete entry
-@item g
-@tab refresh buffer
-@item e
-@tab edit entry at point
-@item w
-@tab copy url
-@end multitable
 
 @c *********************************************************************
 @node Distribution
@@ -195,62 +150,139 @@ guix package -f ./guix.scm
 
 @section from Git
 
-@lisp
+To run from the sources, clone or in any other way download the sources.
+@example
 git clone @value{GIT}
+@end example
+
+Setup Emacs configuration to load the sources, by adding this to your Emacs configs.
+@lisp
 (push (directory-file-name "/path/to/emacs-shroud/") load-path)
 (require 'shroud)
 @end lisp
 
 @section From Melpa Package Repository
 
-The easiest way to install is to use Melpa at @value{MELPA}, and just
+The easiest way to install is to use Melpa at @uref{@value{MELPA}}, and just
 type this inside Emacs.
 
 @example
-@samp{M-x package-install RET shroud}
+M-x package-install RET shroud RET
 @end example
 
 @c *********************************************************************
 @node Configuration
 @chapter Configuration
 
-Shroud's configuration options can be changed in the @samp{$HOME/.shroud}
-file. The default database is located in @samp{~/.config/shroud/db.gpg}.
+Shroud, the CLI application which is not included in this package, but
+can be installed seperately has some defaults where it looks for the
+configuration files and secrets-file. It's configuration can be
+changed in the @samp{$HOME/.shroud} file. The default secrets file is
+stored in @samp{$HOME/.config/shroud/db.gpg}.
 
-However, Emacs-shroud also includes an elisp implementation of
-Shroud. It can be configured to use the same defaults as Shroud.
+You can edit @samp{$HOME/.shroud} to modify Shroud's behaviour.
+
+Emacs-shroud can be configured to use the same defaults as Shroud CLI
+implementation.
 @lisp
+(require 'shroud)
 (setq shroud-el--database-file "~/.config/shroud/db.gpg")
 (setq shroud-el--config-file "~/.shroud")
 (setq shroud-el--gpg-key "user@@example.com")
 @end lisp
-If gpg-key is not set and no configuration file is found Shroud may
-prompt you to choose a key each time you edit the database(remember
-it's just alists)
-You can choose to use the elisp implementation only with this bit of Elisp.
+
+If no usable GnuPG key is set neither one is found in the
+configuration file, Shroud may prompt you to choose a key each time
+you edit the secrets file.
+
+To initialize Shroud, add this to your configuration file.
+
+@example
+(shroud--init)
+@end example
+
+If no executable is found for Shroud CLI then the program will setup
+automatically to use Elisp implementation only. You can choose to use
+the Elisp implementation exclusively with this in your Emacs
+configuration.
 @lisp
 (setq shroud-executable nil)
 (shroud--init)
 @end lisp
-If the shroud-executable is nil shroud--init will setup accordingly.
 
-@c *********************************************************************
-@node Example Setup
-@chapter Examples
+Or you can use the Emacs's Customise feature:
+@example
+M-x customize-group shroud
+@end example
+
 
 @section Sample Shroud Config
 
-@samp{$HOME/.shroud} or M-x customize-group shroud
+By default it's stored in @samp{~/.shroud}
+
+The config expects an alist that at the very least contains a symbol
+@samp{user-id} associated to a valid GnuPG key.
 @lisp
-'((user-id . "AAOEUOEUP12323"))
+'((user-id . "user@@example.com"))
 @end lisp
 
-@section Sample Shroud Database
+@section Sample Shroud Secrets File
 
+By default it's stored in @samp{~/.config/shroud/db.gpg}
+
+Though you can add as many fields as you'd like to the @samp{contents}
+section, please be wary to use @samp{password} and @samp{username}
+fields, spelled exactly so. You can always add extra fields for
+example 'notes', or 'comments' but the included Interfaces only
+support a few given fields 'url', 'username', and 'password'.
 @lisp
-;; -*- epa-file-encrypt-to: ("AAOEUOEUP12323") -*-
-(((id . "my-bank") (contents  ("password" . "hackme") ("username" . "pwned") ...)) ...)
+;; -*- epa-file-encrypt-to: ("user@@example.com") -*-
+(((id . "user01")
+      (contents  ("password" . "hackme") ("username" . "please")))
+ ((id . "user02")
+      (contents  ("password" . "1337") ("username" . "l33t") ("url" . "abc.xyz")))
 @end lisp
+
+
+@c *********************************************************************
+@node Usage
+@chapter Usage
+
+There are two user-facing interfaces included with this package, A
+Buffers User Interface accessible with
+@example
+M-x shroud-bui
+@end example
+
+If you'd like to bind it to a keyboard shortcut, add this to the Emacs configuration file.
+@example
+(global-set-key (kbd "C-c p") 'shroud-bui)
+@end example
+
+Keybinds for the Buffers Interface:
+@multitable {aaa} {aaaaaaaaaaaaaaaaaaa}
+@headitem Key
+@tab Action
+@item ``c''
+@tab Copy password
+@item ``d''
+@tab Delete entry
+@item ``e''
+@tab Edit entry at point
+@item ``a''
+@tab Add new entry
+@item ``w''
+@tab Copy url
+@item ``I''
+@tab Copy username
+@item ``g''
+@tab Refresh buffer
+@end multitable
+
+There is also a less intrusive and a minimal Minibuffer interface:
+@example
+M-x shroud
+@end example
 
 @c *********************************************************************
 @node Copying
