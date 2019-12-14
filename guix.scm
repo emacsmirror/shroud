@@ -49,25 +49,26 @@
  ((guix licenses) #:prefix license:)
  (gnu packages password-utils)
  (gnu packages emacs)
- (gnu packages emacs-xyz))
+ (gnu packages emacs-xyz)
+ (gnu packages perl)
+ (gnu packages texinfo))
 
 (define-public emacs-shroud
-  (package
-   (name "emacs-shroud")
-   (version "1.83")
-   (source
-    (origin
-     (method git-fetch)
-     (uri
-      (git-reference
-       (url "https://github.com/o-nly/emacs-shroud.git")
-       (commit version)))
-     (file-name
-      (git-file-name name version))
-     (sha256
-      (base32
-       "0hns8hlqr76grsninarkzh2mv8vblq2ffhi4iswp013aqhs6q42f"))))
+  (package (name "emacs-shroud")
+   (version "1.83.4")
+   (source (origin (method git-fetch)
+                   (uri (git-reference
+                         (url
+                          "https://git.savannah.gnu.org/git/emacs-shroud.git")
+                         (commit version)))
+                   (file-name (git-file-name name version))
+                   (sha256
+                    (base32
+                     "1yvdjx0kp4y8w5yz2cbqq9n6xl5splvmsyyx8ld1xv0q1c9872nf"))))
    (build-system emacs-build-system)
+   (native-inputs
+    `(("perl" ,perl)
+      ("texinfo" ,texinfo)))
    (propagated-inputs
     `(("shroud" ,shroud)
       ("emacs-f" ,emacs-f)
@@ -75,12 +76,12 @@
       ("emacs-s" ,emacs-s)
       ("emacs-bui" ,emacs-bui)
       ("gnupg" ,gnupg)))
-   (home-page "http://git.nly.info.tm:9001/shroud.git")
+   (home-page "https://www.nongnu.org/emacs-shroud")
    (synopsis "Emacs interface for Shroud password manager")
    (description
-    "This package provides functions for working with shroud
-password manager using Elisp, a reader for Shroud DB, and an Buffers
-User Interface for using shroud password database.")
+    "This package provides functions for working with shroud password
+manager using Elisp, a reader for Shroud DB, and an Buffers User
+Interface for using shroud password database.")
    (license license:gpl3+)))
 
 emacs-shroud
