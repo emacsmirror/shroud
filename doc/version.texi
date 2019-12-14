@@ -1,0 +1,6 @@
+@set PROG-NAME Emacs-Shroud
+@set PROG-VERSION 1.1
+@set MANUAL-VERSION 1.1
+@set MANUAL-UPDATED 14 December 2019
+@set MANUAL-UPDATED-MONTH December 2019
+@set MELPA https://melpa.org/#/

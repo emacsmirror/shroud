@@ -1,0 +1,264 @@
+\input texinfo
+@c -*- texinfo -*-
+
+@include version.texi
+
+@c %**start of header
+@setfilename emacs-shroud.info
+@documentencoding UTF-8
+@settitle @value{PROG-NAME} Reference Manual
+@documentlanguage en
+@c %**end of header
+
+@include urls.texi
+@copying
+Copyright @copyright{} 2019 Amar M. Singh@*
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.  A
+copy of the license is included in the section entitled ``GNU Free
+Documentation License.''
+@end quotation
+@end copying
+
+@dircategory @value{PROG-NAME}
+@direntry
+* @value{PROG-NAME}: (emacs-shroud).       Lisp hacker's password manager.
+@end direntry
+
+@titlepage
+@title @value{PROG-NAME} Reference Manual
+@subtitle A User's Guide for @value{PROG-NAME} Password Manager
+@author The @value{PROG-NAME} Developers
+
+@page
+@vskip 0pt plus 1filll
+Edition @value{MANUAL-VERSION} @*
+@value{MANUAL-UPDATED-MONTH} @*
+
+@insertcopying
+@end titlepage
+
+@contents
+
+
+@c *********************************************************************
+
+@node Top
+@top @value{PROG-NAME}
+
+@value{PROG-NAME} is a small, extensible password manager. This manual
+describes how to use @value{PROG-NAME} and some of the ways to customise
+it; it corresponds to the @value{PROG-NAME} version
+@value{PROG-VERSION}.
+
+@c See 'manual-html-mono' and 'manual-html-node' in admin/admin.el.
+@html
+The homepage for @value{PROG-NAME} is at
+<a href="@value{HOMEPAGE}">Nongnu.org</a>.<br>
+To view this manual in other formats, see
+<a href="@value{MANUALS}">Online Manuals</a>.<br>
+@end html
+
+For information on the extension language for @value{PROG-NAME}, see @ref{Top, Guile
+Reference Manual,, guile,}.
+
+For information on Emacs text-editor, see @ref{Top, Emacs Reference Manual,,
+emacs,}.
+
+This is the @value{PROG-NAME} User Manual for the @value{PROG-NAME} password
+manager, @value{MANUAL-VERSION}.@refill
+
+@insertcopying
+
+@menu
+* Introduction::                 Shroud secrets manager
+* Distribution::        Get the source code
+* Installation::        Install @value{PROG-NAME} using Guix
+* Configuration::                Pick some options, set variables
+* Example Setup::                A minimal setup
+@c * Usage::               Using @value{PROG-NAME} from the command line, application keybinds
+@c * API::                 The programming interface
+@c * Extensions::          Modules and extensions for @value{PROG-NAME}
+@c * Development::         Making changes to the source code and contributing
+* Copying::             The GNU General Public License gives you permission to redistribute @value{PROG-NAME}
+* Documentation License::      The license for this documentation
+
+@end menu
+
+@c *********************************************************************
+@node Introduction
+@chapter Introduction
+
+Shroud is a password manager written in Guile which uses GnuPG in
+the backend. See Shroud's website at @uref{https://dthompson.us/projects/shroud.html, this link.} This package is an
+Emacs interface to Shroud using the Buffers User Interface library.
+
+Shroud stores secrets as a plain text encrypted using
+GnuPG. Particularly, in Lisp's S-expressions, in a form of
+associaton lists. This provides the dual benefit that, the file is
+trivial to parse by machine, yet at the same time, is perfectly
+readable/editable by a human.
+
+You can view, copy and edit secrets from Emacs.
+
+@section Features
+
+@itemize
+@item
+Elisp procedures to operate the Shroud command line interface.
+@item
+An Elisp implementation of Shroud, using EPG and dash.
+@item
+A Buffers User Interface to view entries in the database.
+@end itemize
+
+@section Quick start
+
+@itemize
+@item
+M-x shroud (for minimal interface) M-x shroud-bui (for buffers interface)
+@item
+(global-set-key (kbd "C-c p") 'shroud)
+@item
+Keybinds: To view the keybinding press @samp{C-h m} in the @strong{Shroud}
+Buffer
+@end itemize
+@multitable {aaa} {aaaaaaaaaaaaaaaaaaa}
+@headitem Key
+@tab Action
+@item c
+@tab copy password
+@item I
+@tab copy username
+@item a
+@tab add new entry
+@item d
+@tab delete entry
+@item g
+@tab refresh buffer
+@item e
+@tab edit entry at point
+@item w
+@tab copy url
+@end multitable
+
+@c *********************************************************************
+@node Distribution
+@chapter Distribution
+
+@value{PROG-NAME} is @dfn{free software}; this means that everyone is free
+to use it and free to redistribute it under certain conditions.
+@value{PROG-NAME} is not in the public domain; it is copyrighted and there
+are restrictions on its distribution. The precise conditions are found
+in the GNU General Public License that comes with
+@value{PROG-NAME}. @footnote{This manual is itself covered by the GNU Free
+Documentation License.  This license is similar in spirit to the
+General Public License, but is more suitable for documentation.}
+
+Get the latest source code using git from Nongnu.org
+@example
+git clone @value{GIT}
+@end example
+
+@ifnothtml
+The list of releases are available at @value{RELEASES}
+@end ifnothtml
+
+@ifhtml
+@html
+The list of releases are available at <a href="@value{RELEASES}">Releases.</a>
+@end html
+@end ifhtml
+
+@c *********************************************************************
+@node Installation
+@chapter Installation
+
+@section Install with Guix
+
+If you use the Gnu Guix package manager, then you can easily install
+@value{PROG-NAME} with
+@example
+guix package -i emacs-shroud 
+@end example
+
+If you want the latest package, clone the source repository
+@example
+git clone @value{GIT}
+cd emacs-shroud
+guix package -f ./guix.scm
+@end example
+
+@section from Git
+
+@lisp
+git clone @value{GIT}
+(push (directory-file-name "/path/to/emacs-shroud/") load-path)
+(require 'shroud)
+@end lisp
+
+@section From Melpa Package Repository
+
+The easiest way to install is to use Melpa at @value{MELPA}, and just
+type this inside Emacs.
+
+@example
+@samp{M-x package-install RET shroud}
+@end example
+
+@c *********************************************************************
+@node Configuration
+@chapter Configuration
+
+Shroud's configuration options can be changed in the @samp{$HOME/.shroud}
+file. The default database is located in @samp{~/.config/shroud/db.gpg}.
+
+However, Emacs-shroud also includes an elisp implementation of
+Shroud. It can be configured to use the same defaults as Shroud.
+@lisp
+(setq shroud-el--database-file "~/.config/shroud/db.gpg")
+(setq shroud-el--config-file "~/.shroud")
+(setq shroud-el--gpg-key "user@@example.com")
+@end lisp
+If gpg-key is not set and no configuration file is found Shroud may
+prompt you to choose a key each time you edit the database(remember
+it's just alists)
+You can choose to use the elisp implementation only with this bit of Elisp.
+@lisp
+(setq shroud-executable nil)
+(shroud--init)
+@end lisp
+If the shroud-executable is nil shroud--init will setup accordingly.
+
+@c *********************************************************************
+@node Example Setup
+@chapter Examples
+
+@section Sample Shroud Config
+
+@samp{$HOME/.shroud} or M-x customize-group shroud
+@lisp
+'((user-id . "AAOEUOEUP12323"))
+@end lisp
+
+@section Sample Shroud Database
+
+@lisp
+;; -*- epa-file-encrypt-to: ("AAOEUOEUP12323") -*-
+(((id . "my-bank") (contents  ("password" . "hackme") ("username" . "pwned") ...)) ...)
+@end lisp
+
+@c *********************************************************************
+@node Copying
+@appendix GNU GENERAL PUBLIC LICENSE
+@include gpl.texi
+
+@c *********************************************************************
+@node Documentation License
+@appendix GNU Free Documentation License
+@include doclicense.texi
+@bye

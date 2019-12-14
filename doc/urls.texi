@@ -1,0 +1,4 @@
+@set GIT https://git.savannah.nongnu.org/cgit/emacs-shroud.git
+@set RELEASES https://download.savannah.nongnu.org/releases/emacs-shroud/
+@set HOMEPAGE https://www.nongnu.org/emacs-shroud/
+@set MANUALS https://www.nongnu.org/emacs-shroud/manual
