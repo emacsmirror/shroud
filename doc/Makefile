@@ -1,4 +1,4 @@
-outs = emacs-shroud.html emacs-shroud.info emacs-shroud emacs-shroud.txt manual emacs-shroud.pdf
+outs = emacs-shroud.html emacs-shroud.info emacs-shroud emacs-shroud.txt # manual # emacs-shroud.pdf
 
 all: $(outs)
 
