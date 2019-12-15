@@ -10,12 +10,10 @@ html_args=--css-include=reset.css \
 
 support_email='emacs-shroud-users@nongnu.org'
 
+.ONESHELL:
 default: emacs-shroud.info dir
 
 all: $(outs)
-
-clean:
-	-rm -rf $(outs) $(extra_outs)
 
 emacs-shroud.info: $(texi_source)
 	makeinfo $(texi_source)
@@ -39,3 +37,8 @@ manual: $(texi_source)
 
 dir: emacs-shroud.info
 	install-info $< $@
+
+.PHONY:
+clean:
+	-rm -rf $(outs) $(extra_outs)
+

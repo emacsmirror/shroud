@@ -4,29 +4,43 @@
 ;;; tiny script to build project from source files, and source documentation.
 
 ;;; Code:
-(defvar make-inputs '("shroud-bui.el"  "shroud-cli.el" "shroud.el" "shroud-el.el"))
+(require 'bytecomp)
 
+(defvar make-inputs '("shroud-el.el"  "shroud-cli.el" "shroud-bui.el" "shroud.el"))
 (defvar output-dir "bin/emacs/")
 
-;;; generate the compiled files
-(mapc #'byte-compile-file make-inputs)
+(defun make-output-dir (dir)
+  "Make DIR if not already exists."
+    (if (file-directory-p dir) 0
+      (make-directory dir t)))
 
-;;; the output of compilation
-(defvar make-outputs
-  (mapcar #'(lambda (file)
-              (concat file "c"))
-                        make-inputs))
+(defun copy-files (files dir)
+  "Copy FILES to DIR."
+  (mapc #'(lambda (file)
+          (copy-file file dir t nil nil t))
+      files))
 
-;;; create an output directory
-(if (file-directory-p output-dir) 0
-  (make-directory output-dir t))
+(defun incremental-compile (files)
+  "Compile and load FILES in order."
+  (let ((file (car files)))
+    (byte-compile-file file)
+    (load-file (concat file "c"))
+    (incremental-compile (cdr files))))
 
-;;; move ouputs to output directory
-(mapc #'(lambda (file)
-          (rename-file file output-dir))
-      make-outputs)
+(defun with-directory-excursion (dir thunk)
+  "Switch to DIR before performing THUNK.
+Return to the previous state on exit."
+  (let ((cur default-directory))
+    (cd dir)
+    (eval thunk)
+    (cd cur)))
 
-;;; return 0
+(make-output-dir output-dir)
+
+(copy-files make-inputs output-dir)
+
+(with-directory-excursion output-dir
+ '(incremental-compile make-inputs))
+
 0
-
 ;;; make.el ends here

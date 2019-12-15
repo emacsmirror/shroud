@@ -15,10 +15,14 @@
 
 SUBDIRS = doc
 
+.ONESHELL:
 all:
-	emacs -Q --script ./make.el && \
+	emacs -Q --batch --script ./make.el
 	$(MAKE) -C ./doc
 
+.PHONY: clean
+
 clean:
-	rm -rf bin && \
+	-rm -rf bin
+	-rm *.elc
 	$(MAKE) -C ./doc clean
