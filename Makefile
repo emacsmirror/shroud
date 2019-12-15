@@ -15,6 +15,16 @@
 
 SUBDIRS = doc
 
+inputs=shroud-el.el shroud-cli.el shroud-bui.el shroud.el
+
+tests=shroud-test.el
+
+tag_old=1.83.4
+
+tag=1.83.24
+
+dists=emacs-shroud-$(tag).tar.gz emacs-shroud-latest.tar.gz emacs-shroud-$(tag).zip
+
 .ONESHELL:
 all:
 	emacs -Q --batch --script ./make.el
@@ -25,11 +35,24 @@ all:
 clean:
 	-rm -rf bin
 	-rm *.elc
+	-rm $(dists)
 	$(MAKE) -C ./doc clean
 
 check: test
 
-test: shroud-test.el
+test: $(tests)
 	emacs -Q -batch -l ert \
 	-l shroud-el.el shroud-cli.el shroud-bui.el shroud.el \
 	-l $< -f ert-run-tests-batch-and-exit
+
+dist-release: $(inputs) $(tests) changelog
+	git archive --format tar.gz $(tag) -6 -o emacs-shroud-$(tag).tar.gz
+
+dist-latest: $(inputs) $(tests)
+	git archive --format tar.gz HEAD -6 -o emacs-shroud-latest.tar.gz
+
+dist-zip: $(inputs) $(tests)
+	git archive --format zip $(tag) -6 -o emacs-shroud-$(tag).zip
+
+changelog:
+	git log $(tag_old)...$(tag) --pretty > changelog
