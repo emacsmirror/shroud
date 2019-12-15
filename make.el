@@ -40,7 +40,7 @@ Return to the previous state on exit."
 (copy-files make-inputs output-dir)
 
 (with-directory-excursion output-dir
- '(incremental-compile make-inputs))
+                          '(incremental-compile make-inputs))
 
-0
+(kill-emacs 0)
 ;;; make.el ends here

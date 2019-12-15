@@ -26,3 +26,10 @@ clean:
 	-rm -rf bin
 	-rm *.elc
 	$(MAKE) -C ./doc clean
+
+check: test
+
+test: shroud-test.el
+	emacs -Q -batch -l ert \
+	-l shroud-el.el shroud-cli.el shroud-bui.el shroud.el \
+	-l $< -f ert-run-tests-batch-and-exit
