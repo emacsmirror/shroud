@@ -19,6 +19,8 @@ inputs=shroud-el.el shroud-cli.el shroud-bui.el shroud.el
 
 tests=shroud-test.el
 
+extras=manual changelog
+
 tag_old=1.83.4
 
 tag=1.83.24
@@ -36,6 +38,7 @@ clean:
 	-rm -rf bin
 	-rm *.elc
 	-rm $(dists)
+	-rm -rf $(extras)
 	$(MAKE) -C ./doc clean
 
 check: test
@@ -45,7 +48,7 @@ test: $(tests)
 	-l shroud-el.el shroud-cli.el shroud-bui.el shroud.el \
 	-l $< -f ert-run-tests-batch-and-exit
 
-dist-release: $(inputs) $(tests) changelog
+dist-release: $(inputs) $(tests)
 	git archive --format tar.gz $(tag) -6 -o emacs-shroud-$(tag).tar.gz
 
 dist-latest: $(inputs) $(tests)
@@ -56,3 +59,13 @@ dist-zip: $(inputs) $(tests)
 
 changelog:
 	git log $(tag_old)...$(tag) --pretty > changelog
+
+doc/manual: doc/emacs-shroud.texi
+	$(MAKE) -C ./doc manual
+
+update-manual: doc/manual
+	git checkout gh-pages
+	cp doc/manual ./ -r
+	git add --all manual/*
+	git commit -am "Updated Manuals"
+	git checkout master
