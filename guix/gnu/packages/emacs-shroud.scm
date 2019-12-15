@@ -34,7 +34,7 @@
 
 (define-public emacs-shroud
   (package (name "emacs-shroud")
-   (version "1.83.4")
+   (version "1.83.24")
    (source (origin (method git-fetch)
                    (uri (git-reference
                          (url
@@ -43,7 +43,7 @@
                    (file-name (git-file-name name version))
                    (sha256
                     (base32
-                     "1yvdjx0kp4y8w5yz2cbqq9n6xl5splvmsyyx8ld1xv0q1c9872nf"))))
+                     "016j5f3igc8k84cq16gr95x868ddlav52d5fslv8jakcjaqkhxg5"))))
    (build-system gnu-build-system)
    (arguments
     `(#:phases (modify-phases %standard-phases
