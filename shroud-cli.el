@@ -97,6 +97,8 @@ Nil arguments will be ignored.  Returns the output on success,  or
     (defalias 'shroud--run (-partial #'shroud-el-run (or shroud-el--database-file
                                                          shroud-database-file)))))
 
+(defalias 'shroud--run (-partial #'shroud-el-run (or shroud-el--database-file
+                                                         shroud-database-file)))
 (shroud--init)
 
 ;;; Help
