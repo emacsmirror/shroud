@@ -24,7 +24,7 @@
  (guix download)
  (guix git-download)
  (gnu packages gnupg)
- (guix build-system emacs)
+ (guix build-system gnu)
  ((guix licenses) #:prefix license:)
  (gnu packages password-utils)
  (gnu packages emacs)
@@ -44,10 +44,30 @@
                    (sha256
                     (base32
                      "1yvdjx0kp4y8w5yz2cbqq9n6xl5splvmsyyx8ld1xv0q1c9872nf"))))
-   (build-system emacs-build-system)
+   (build-system gnu-build-system)
+   (arguments
+    `(#:phases (modify-phases %standard-phases
+                 (delete 'configure)
+                 (delete 'check)
+                 (replace 'install
+                   (lambda* (#:key inputs outputs #:allow-other-keys)
+                     (let* ((out (assoc-ref outputs "out"))
+                            (el-dir (string-append out "/share/emacs/site-lisp"))
+                            (doc (string-append
+                                  out "/share/doc/emacs-shroud-" ,version))
+                            (info (string-append out "/share/info")))
+                       (define (copy-to-dir dir files)
+                         (for-each (lambda (f)
+                                     (install-file f dir))
+                                   files))
+                       (with-directory-excursion "doc"
+                         (install-file "emacs-shroud.info" info))
+                       (copy-to-dir doc '("README.org" "TODO.org" "art/shroud.svg"))
+                       (copy-to-dir el-dir (find-files "./bin/emacs/" ".\\el"))
+                       #t))))))
    (native-inputs
-    `(("perl" ,perl)
-      ("texinfo" ,texinfo)))
+    `(("texinfo" ,texinfo)
+      ("emacs-minimal" ,emacs-minimal)))
    (propagated-inputs
     `(("shroud" ,shroud)
       ("emacs-f" ,emacs-f)
@@ -55,13 +75,6 @@
       ("emacs-s" ,emacs-s)
       ("emacs-bui" ,emacs-bui)
       ("gnupg" ,gnupg)))
-   (arguments
-    `(#:phases (modify-phases %standard-phases
-                 (add-after 'build 'build-docs
-                   (lambda* (#:key inputs #:allow-other-keys)
-                     ;; (system "make -C ./doc")
-                     ;; (chdir "..")
-                     #t)))))
    (home-page "https://www.nongnu.org/emacs-shroud")
    (synopsis "Emacs interface for Shroud password manager")
    (description
