@@ -67,6 +67,7 @@
                        #t))))))
    (native-inputs
     `(("texinfo" ,texinfo)
+      ("perl" ,perl)
       ("emacs-minimal" ,emacs-minimal)))
    (propagated-inputs
     `(("shroud" ,shroud)
