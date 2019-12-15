@@ -13,28 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-outs = emacs-shroud.html emacs-shroud.txt emacs-shroud.texi emacs-shroud.info emacs-shroud
+SUBDIRS = doc
 
-all: $(outs)
+all:
+	emacs -Q --script ./make.el && \
+	$(MAKE) -C ./doc
 
 clean:
-	-rm $(outs)
-
-emacs-shroud.texi: README.org
-	emacs -q --batch --eval "(progn (find-file \"$<\") \
-				(org-texinfo-export-to-texinfo))"
-
-emacs-shroud.info: emacs-shroud.texi
-	makeinfo emacs-shroud.texi
-
-emacs-shroud: emacs-shroud.texi
-	makeinfo emacs-shroud.texi --html
-
-emacs-shroud.html: emacs-shroud.texi
-	makeinfo emacs-shroud.texi --html --no-split
-
-emacs-shroud.txt: README.org
-	makeinfo emacs-shroud.texi --plaintext > emacs-shroud.txt
-
-emacs-shroud.pdf: README.org
-	makeinfo emacs-shroud.texi --pdf
+	rm -rf bin && \
+	$(MAKE) -C ./doc clean
