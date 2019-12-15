@@ -1,4 +1,4 @@
-outs = emacs-shroud.html emacs-shroud.info emacs-shroud emacs-shroud.txt # manual # emacs-shroud.pdf
+outs = emacs-shroud.html emacs-shroud.info emacs-shroud emacs-shroud.txt dir # manual # emacs-shroud.pdf
 
 all: $(outs)
 
@@ -26,3 +26,6 @@ emacs-shroud.pdf: emacs-shroud.texi
 
 manual: emacs-shroud.texi
 	./gendocs.sh emacs-shroud 'Emacs-Shroud Reference Manual' --html '--css-include=reset.css --css-include=style.css --css-include=manual.css' --email 'emacs-shroud-users@nongnu.org'
+
+dir: emacs-shroud.info
+	install-info $< $@
