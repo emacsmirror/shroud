@@ -1,0 +1,68 @@
+* Todo
+1. fix shroud-hide to support spaces, ' ' (and '=') in strings? DONE
+   (shroud cli doesn't accept '=')
+2. shroud-hide to support renaming entries, currently you edit, save
+   as a different id, then delete the old one.
+3. hide the details of an entry in shroud-el, modules using shroud-el
+   should not care what kind of an object shroud entry is.
+   1. shroud-cli DONE 
+   2. shroud-bui TODO
+
+* anti-Todo
+1. do not remove shroud-bui--alist in shroud-bui
+2. shroud-show-entry keeps using `((id . ,id) (contents ,contents)
+3. do not make a generic query method.
+4. do not allow flexible entry format.
+
+* Shroud-el
+** functions 
+*** DONE shroud-el--~                                                :remove:
+*** DONE shroud-el--file-contents                                       :nil:
+*** DONE shroud-el--read-config                                      :remove:
+*** DONE shroud-el--apply-config!                                   :generic:
+*** DONE shroud-el--database-file                                       :nil:
+*** DONE shroud-el--gpg-key                                          :remove:
+*** DONE shroud-el--user-id                                             :add:
+*** DONE shroud-el--config-file                                         :nil:
+*** DONE shroud-el--write-file                                      :cleanup:
+*** DONE shroud-el--decrypting-reader                                :remove:
+*** DONE shroud-el--encrypting-reader                                :remove:
+*** DONE shroud-el--read-db                                          :remove:
+*** DONE shroud-el--read-database                                    :remove:
+*** TODO shroud-el--query                                           :generic:
+- cannot delete at the moment, or do any better either.
+*** DONE shroud-el--entry-get                                       :generic:
+-  
+*** TODO shroud-el--entry?
+*** TODO shroud-el--entry-exists?                                    :faster:
+*** TODO shroud-el--run                                              :faster:
+*** TODO shroud-el--entry->output-string                        :move:to:cli:
+*** TODO shroud-el--entry->input-string                         :move:to:cli:
+*** TODO shroud-el--input-string->shroud-entry                  :move:to:cli:
+*** TODO shroud-el-run                                               :faster:
+* Shroud-cli, problematic
+*** TODO (shroud--list)                                             :main:
+*** TODO (shroud--show-entry)                                       :main:
+*** TODO (shroud-cli--entry-get)                                      :main:
+*** TODO (shroud--hide)                                             :main:
+*** TODO (shroud--remove)                                              :main:
+*** TODO (shroud--find "email")                                        :main:
+*** TODO (shroud-cli--input-string->entry)                             :main:
+*** TODO (shroud-cli--entry->input-string)                             :main:
+*** TODO (shroud-cli--entry->output-string)                            :main:
+*** TODO (shroud--help)
+*** TODO (shroud--help--list)
+*** TODO (shroud--help--remove)
+*** TODO (shroud--help--hide)
+*** TODO (shroud--help--show)
+*** TODO (shroud--version)
+*** TODO (shroud--hide-edit)
+*** TODO (shroud--show)
+*** TODO (shroud--show-sub-entries)
+*** TODO (shroud--show-clipboard)
+*** TODO (shroud--show-username "email")
+*** TODO (shroud--show-password "email")
+*** TODO (shroud--show-url "email")
+*** TODO (shroud--query )
+*** TODO (shroud-cli--entry-name->input-string)
+*** TODO (shroud-cli--entry-name->entry-sexp)
