@@ -40,49 +40,11 @@
 
 ;;; Code:
 
-(use-modules
- (guix packages)
- (guix download)
- (guix git-download)
- (gnu packages gnupg)
- (guix build-system emacs)
- ((guix licenses) #:prefix license:)
- (gnu packages password-utils)
- (gnu packages emacs)
- (gnu packages emacs-xyz)
- (gnu packages perl)
- (gnu packages texinfo))
+(load (string-append
+		 (dirname (current-filename))
+		 "/guix/gnu/packages/emacs-shroud.scm"))
 
-(define-public emacs-shroud
-  (package (name "emacs-shroud")
-   (version "1.83.4")
-   (source (origin (method git-fetch)
-                   (uri (git-reference
-                         (url
-                          "https://git.savannah.gnu.org/git/emacs-shroud.git")
-                         (commit version)))
-                   (file-name (git-file-name name version))
-                   (sha256
-                    (base32
-                     "1yvdjx0kp4y8w5yz2cbqq9n6xl5splvmsyyx8ld1xv0q1c9872nf"))))
-   (build-system emacs-build-system)
-   (native-inputs
-    `(("perl" ,perl)
-      ("texinfo" ,texinfo)))
-   (propagated-inputs
-    `(("shroud" ,shroud)
-      ("emacs-f" ,emacs-f)
-      ("emacs-dash" ,emacs-dash)
-      ("emacs-s" ,emacs-s)
-      ("emacs-bui" ,emacs-bui)
-      ("gnupg" ,gnupg)))
-   (home-page "https://www.nongnu.org/emacs-shroud")
-   (synopsis "Emacs interface for Shroud password manager")
-   (description
-    "This package provides functions for working with shroud password
-manager using Elisp, a reader for Shroud DB, and an Buffers User
-Interface for using shroud password database.")
-   (license license:gpl3+)))
+(use-modules (gnu packages emacs-shroud))
 
 emacs-shroud
 
