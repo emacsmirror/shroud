@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="/%%PACKAGE%%/css/main.css">
+<title>
+%%TITLE%%
+</title>
+</head>
+<body>
 <h2>%%TITLE%%</h2>
 
 <address>last updated %%DATE%%</address>
@@ -53,7 +62,7 @@ script</a>.)</p>
 Please send broken links and other corrections or suggestions to
 <a href="mailto:%%EMAIL%%">&lt;%%EMAIL%%&gt;</a>.</p>
 
-<p>Copyright &copy; 2019 Emacs-Shroud Developers.</p>
+<p>Copyright &copy; 2019 %%PACKAGE%% Developers.</p>
 
 <p>Verbatim copying and distribution of this entire article are
 permitted worldwide, without royalty, in any medium, provided this
