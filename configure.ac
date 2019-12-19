@@ -20,6 +20,8 @@ AC_INIT([emacs-shroud],
 	[emacs-shroud-users@gnu.org], [emacs-shroud],
 	[https://www.nongnu.org/emacs-shroud/])
 
+AC_CONFIG_AUX_DIR([build-aux])
+
 AM_INIT_AUTOMAKE([-Wall -Werror])
 
 AC_CONFIG_FILES([
@@ -29,5 +31,3 @@ doc/Makefile
 ])
 
 AC_OUTPUT
-
-AC_CONFIG_AUX_DIR([build-aux])
