@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 AC_INIT([emacs-shroud],
-	[1.83.24],
+	[1.105],
 	[emacs-shroud-users@gnu.org], [emacs-shroud],
 	[https://www.nongnu.org/emacs-shroud/])
 
