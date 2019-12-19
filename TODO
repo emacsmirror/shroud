@@ -1,3 +1,4 @@
+;; -*- mode:org -*-
 * Todo
 1. fix shroud-hide to support spaces, ' ' (and '=') in strings? DONE
    (shroud cli doesn't accept '=')
