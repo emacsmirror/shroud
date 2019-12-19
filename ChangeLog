@@ -1,0 +1,12 @@
+2c0366e  (tag: refs/tags/1.83.24, refs/remotes/nongnu/master, refs/remotes/github/master) update guix package to build documentation.
+c7ea92e  (tag: refs/tags/1.83.4) nongnu: comply with requirements(license header)
+8bf9470  (tag: refs/tags/1.83.3) nongnu: add license header
+d72af0e  (tag: refs/tags/1.83.2) guix: update package
+ce5374a  (tag: refs/tags/1.83) use completing read interface by default
+a7706ee  (tag: refs/tags/1.15.1) update package description
+f9af394  (tag: refs/tags/1.15) fix depends
+0a28019  (tag: refs/tags/1.14) Shroud: supports 'editing' and 'adding' entries from BUI
+47b5055  (tag: refs/tags/1.12.1, tag: refs/tags/1.12) bump version
+1c64330  (tag: refs/tags/v1.1) Melpa: usage instructions
+dc68f55  (tag: refs/tags/v1) Variable->Custom variable: shroud-timeout-timer;
+d8922d3  (tag: refs/tags/release-0.1, refs/remotes/github/release-0.1, refs/heads/release-0.1) Improved help string in *shroud* buffer
