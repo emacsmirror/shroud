@@ -2,3 +2,4 @@
 @set RELEASES https://download.savannah.nongnu.org/releases/emacs-shroud/
 @set HOMEPAGE https://www.nongnu.org/emacs-shroud/
 @set MANUALS https://www.nongnu.org/emacs-shroud/manual
+@set MELPA https://melpa.org/#/
