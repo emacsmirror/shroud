@@ -20,6 +20,12 @@ AC_INIT([emacs-shroud],
 	[emacs-shroud-users@gnu.org], [emacs-shroud],
 	[https://www.nongnu.org/emacs-shroud/])
 
-AM_INIT_AUTOMAKE([1.11 -Wall -Werror])
+AM_INIT_AUTOMAKE([-Wall -Werror])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([
+Makefile
+src/Makefile
+doc/Makefile
+])
+
+AC_OUTPUT
