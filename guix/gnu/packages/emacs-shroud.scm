@@ -30,11 +30,12 @@
  (gnu packages emacs)
  (gnu packages emacs-xyz)
  (gnu packages perl)
- (gnu packages texinfo))
+ (gnu packages texinfo)
+ (gnu packages autotools))
 
 (define-public emacs-shroud
   (package (name "emacs-shroud")
-   (version "1.83.24")
+   (version "1.105-rc")
    (source (origin (method git-fetch)
                    (uri (git-reference
                          (url
@@ -43,30 +44,12 @@
                    (file-name (git-file-name name version))
                    (sha256
                     (base32
-                     "016j5f3igc8k84cq16gr95x868ddlav52d5fslv8jakcjaqkhxg5"))))
+                     "1d7zviz4jjwpsfay0zcaa13g11nxhp20p2hs0w5sxmiwwg7awdsm"))))
    (build-system gnu-build-system)
-   (arguments
-    `(#:phases (modify-phases %standard-phases
-                 (delete 'configure)
-                 (delete 'check)
-                 (replace 'install
-                   (lambda* (#:key inputs outputs #:allow-other-keys)
-                     (let* ((out (assoc-ref outputs "out"))
-                            (el-dir (string-append out "/share/emacs/site-lisp"))
-                            (doc (string-append
-                                  out "/share/doc/emacs-shroud-" ,version))
-                            (info (string-append out "/share/info")))
-                       (define (copy-to-dir dir files)
-                         (for-each (lambda (f)
-                                     (install-file f dir))
-                                   files))
-                       (with-directory-excursion "doc"
-                         (install-file "emacs-shroud.info" info))
-                       (copy-to-dir doc '("README.org" "TODO.org" "art/shroud.svg"))
-                       (copy-to-dir el-dir (find-files "./bin/emacs/" ".\\el"))
-                       #t))))))
    (native-inputs
-    `(("texinfo" ,texinfo)
+    `(("autoconf" ,autoconf)
+      ("automake" ,automake)
+      ("texinfo" ,texinfo)
       ("perl" ,perl)
       ("emacs-minimal" ,emacs-minimal)))
    (propagated-inputs
