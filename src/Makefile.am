@@ -15,13 +15,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-SUBDIRS = doc src
-dist_doc_DATA = README
-
-SUPPORT_EMAIL=emacs-shroud-users@nongnu.org
-
-MANUAL_TITLE=Emacs-Shroud Reference Manual
-
-.PHONY: manual
-manual:
-	GENDOCS_TEMPLATE_DIR=doc/extra ./scripts/gendocs.sh --email $(SUPPORT_EMAIL) -s $(info_TEXINFOS) '$(MANUAL_TITLE)' -I ./doc/ --html '$(AM_MAKEINFOHTMLFLAGS)'
+dist_lisp_DATA=shroud-el.el \
+	shroud-cli.el \
+	shroud-bui.el \
+	shroud.el
