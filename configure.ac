@@ -21,6 +21,7 @@ AC_INIT([emacs-shroud],
 	[https://www.nongnu.org/emacs-shroud/])
 
 AC_CONFIG_AUX_DIR([build-aux])
+AC_CONFIG_MACRO_DIRS([m4])
 
 AM_INIT_AUTOMAKE([-Wall -Werror])
 
