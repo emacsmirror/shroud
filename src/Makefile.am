@@ -15,7 +15,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-dist_lisp_DATA=shroud-el.el \
+lisp_LISP = shroud-el.el \
+	shroud-cli.el \
+	shroud-bui.el \
+	shroud.el
+
+dist_lisp_LISP = shroud-el.el \
 	shroud-cli.el \
 	shroud-bui.el \
 	shroud.el

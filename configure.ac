@@ -20,8 +20,10 @@ AC_INIT([emacs-shroud],
 	[emacs-shroud-users@gnu.org], [emacs-shroud],
 	[https://www.nongnu.org/emacs-shroud/])
 
+AC_CONFIG_SRCDIR([src])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIRS([m4])
+AM_SILENT_RULES([yes])
 
 AM_INIT_AUTOMAKE([-Wall -Werror])
 
@@ -30,5 +32,10 @@ Makefile
 src/Makefile
 doc/Makefile
 ])
+
+AM_PATH_LISPDIR
+
+dnl subst emacs
+AC_PATH_PROG([EMACS], [emacs])
 
 AC_OUTPUT
