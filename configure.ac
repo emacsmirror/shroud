@@ -29,3 +29,5 @@ doc/Makefile
 ])
 
 AC_OUTPUT
+
+AC_CONFIG_AUX_DIR([build-aux])
