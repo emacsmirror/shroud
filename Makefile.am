@@ -22,9 +22,14 @@ SUPPORT_EMAIL=emacs-shroud-users@nongnu.org
 
 MANUAL_TITLE=Emacs-Shroud Reference Manual
 
+custom_TEXINFOS  = doc/emacs-shroud.texi
+
+AM_MAKEINFOHTMLFLAGS = --css-include=extra/reset.css --css-include=extra/style.css --css-include=extra/manual.css
+
 .PHONY: manual
 manual:
-	GENDOCS_TEMPLATE_DIR=doc/extra ./scripts/gendocs.sh --email $(SUPPORT_EMAIL) -s $(info_TEXINFOS) '$(MANUAL_TITLE)' -I ./doc/ --html '$(AM_MAKEINFOHTMLFLAGS)'
+	$(MAKE) -C ./doc info
+	GENDOCS_TEMPLATE_DIR=doc/extra ./scripts/gendocs.sh --email $(SUPPORT_EMAIL) -s $(custom_TEXINFOS) '$(MANUAL_TITLE)' -I ./doc/ --html '$(AM_MAKEINFOHTMLFLAGS)'
 
 ChangeLog:
 	git log --no-walk --tags --pretty="%h %d %s" --decorate=full > ChangeLog
