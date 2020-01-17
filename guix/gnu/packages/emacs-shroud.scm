@@ -35,7 +35,7 @@
 
 (define-public emacs-shroud
   (package (name "emacs-shroud")
-   (version "1.105-rc")
+   (version "1.105")
    (source (origin (method git-fetch)
                    (uri (git-reference
                          (url
@@ -44,7 +44,7 @@
                    (file-name (git-file-name name version))
                    (sha256
                     (base32
-                     "1d7zviz4jjwpsfay0zcaa13g11nxhp20p2hs0w5sxmiwwg7awdsm"))))
+                     "0q2pb3w8s833fjhkzicciw2php4lsnismad1dnwgp2lcway757ra"))))
    (build-system gnu-build-system)
    (native-inputs
     `(("autoconf" ,autoconf)
