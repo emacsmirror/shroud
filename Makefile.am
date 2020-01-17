@@ -33,3 +33,10 @@ manual:
 
 ChangeLog:
 	git log --no-walk --tags --pretty="%h %d %s" --decorate=full > ChangeLog
+
+# extra dist
+.PHONY: sig
+sig: dist
+	gpg -b --use-agent *.tar.gz
+
+# scp emacs-shroud-1.105.tar.gz.sig nly@dl.sv.nongnu.org:/releases/emacs-shroud/
