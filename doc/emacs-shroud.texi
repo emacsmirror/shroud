@@ -58,11 +58,11 @@ package is an Emacs interface to Shroud using the
 @uref{https://github.com/alezost/bui.el, Buffers User Interface}
 library.
 
-Shroud stores secrets as a plain text encrypted using
-GnuPG. Particularly, in Lisp's S-expressions, in a form of
-associaton lists. This provides the dual benefit that, the file is
-trivial to parse by machine, yet at the same time, is perfectly
-readable/editable by a human.
+Shroud stores secrets in text-format, encrypted using GnuPG. The
+entries are a association list of keys and values. S-expressions
+provide the benefits that, the file is trivial to parse using a
+program, such as Emacs. And, at the same time, is perfectly readable
+and editable by a hand.
 
 You can view, copy and edit secrets from Emacs.
 
