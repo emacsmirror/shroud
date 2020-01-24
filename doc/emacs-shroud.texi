@@ -241,7 +241,7 @@ support a few given fields 'url', 'username', and 'password'.
 (((id . "user01")
       (contents  ("password" . "hackme") ("username" . "please")))
  ((id . "user02")
-      (contents  ("password" . "1337") ("username" . "l33t") ("url" . "abc.xyz")))
+      (contents  ("password" . "1337") ("username" . "l33t") ("url" . "abc.xyz"))))
 @end lisp
 
 
